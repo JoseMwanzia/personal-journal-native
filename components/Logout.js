@@ -17,9 +17,9 @@ export default function Logout() {
     }
 
     return (
-        <TouchableOpacity style={styles.button} onPress={handelLogout}>
+        <Pressable style={styles.button} onPress={() => handelLogout()}>
             <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
+        </Pressable>
     )
 }
 
@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        width: '150px'
     },
     buttonText: {
         color: "white",
