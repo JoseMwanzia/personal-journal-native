@@ -1,14 +1,19 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react'
-import { Alert, SafeAreaView, Text, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, Pressable } from 'react-native'
 
-export default function Logout({ navigation }) {
+export default function Logout() {
 
     async function handelLogout() {
-        const response = await fetch('http://192.168.100.166:3000/logout', {
+        AsyncStorage.setItem('isLoggedIn', '')
+        AsyncStorage.setItem('token', '')
+        navigation.navigate('login')
+
+        const response = await fetch('http://127.0.0.1:3000/logout', {
             method: "DELETE"
         })
         const result = await response.json();
-        result ? (setData(result), navigation.navigate('Login'), Alert.alert('You have successfully logged out!')) : Alert.alert('Logout Failed!')
+        console.log(result);
     }
 
     return (
