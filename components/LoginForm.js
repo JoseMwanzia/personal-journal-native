@@ -6,18 +6,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const logo = require("../assets/Insighter.png")
 
 
-export default function LoginForm({ navigation }) {
+export default function LoginForm() {
     const [click, setClick] = useState(false);
+    const [responseData, setResponseData] = useState({});
     const [data, setData] = useState({
         email: '', password: ''
     });
 
     const handleInputChange = (value, field) => {
         setData(prevState => ({ ...prevState, [field]: value }));
-        };
+    };
 
     async function handleSubmit() {
-        const response = await fetch('http://192.168.100.166:3000/login', {
+        const response = await fetch('http://127.0.0.1:3000/login', {
             method: "POST",
             headers: {
                 Accept: "application/json",
