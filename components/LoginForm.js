@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { Alert, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Linking, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { Alert, Image, Pressable, StyleSheet, Switch, Text, TextInput, View, Linking, ScrollView } from 'react-native'
 import { FontAwesome6 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const logo = require("../assets/Insighter.png")
 
 
@@ -45,35 +47,36 @@ export default function LoginForm({ navigation }) {
     }, [])
 
     return (
-        <SafeAreaView style={styles.container}>
+        <>
+            <ScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={styles.container}>
 
-            <Image source={logo} style={styles.image} resizeMode='contain' />
-            <Text style={styles.title}>Login</Text>
-            <View style={styles.inputView}>
-                <TextInput style={styles.input} placeholder='EMAIL' value={data.email} onChangeText={(text) => handleInputChange(text, 'email')} autoCorrect={false}
-                    autoCapitalize='none' />
-                <TextInput style={styles.input} placeholder='PASSWORD' secureTextEntry value={data.password} onChangeText={(text) => handleInputChange(text, 'password')} autoCorrect={false}
-                    autoCapitalize='none' />
-            </View>
-            <View style={styles.rememberView}>
-                <View style={styles.switch}>
-                    <Switch value={click} onValueChange={setClick} trackColor={{ true: "green", false: "gray" }} />
-                    <Text style={styles.rememberText}>Remember Me</Text>
+                <Image source={logo} style={styles.image} resizeMode='contain' />
+                <Text style={styles.title}>Login</Text>
+                <View style={styles.inputView}>
+                    <TextInput style={styles.input} placeholder='EMAIL' value={data.email} onChangeText={(text) => handleInputChange(text, 'email')} autoCorrect={false}
+                        autoCapitalize='none' />
+                    <TextInput style={styles.input} placeholder='PASSWORD' secureTextEntry value={data.password} onChangeText={(text) => handleInputChange(text, 'password')} autoCorrect={false}
+                        autoCapitalize='none' />
                 </View>
-                <View>
-                    <Pressable onPress={() => Alert.alert("Forget Password!")}>
-                        <Text style={styles.forgetText}>Forgot Password?</Text>
+                <View style={styles.rememberView}>
+                    <View style={styles.switch}>
+                        <Switch value={click} onValueChange={setClick} trackColor={{ true: "green", false: "gray" }} />
+                        <Text style={styles.rememberText}>Remember Me</Text>
+                    </View>
+                    <View>
+                        <Pressable onPress={() => Alert.alert("Forget Password!")}>
+                            <Text style={styles.forgetText}>Forgot Password?</Text>
+                        </Pressable>
+                    </View>
+                </View>
+
+                <View style={styles.buttonView}>
+                    <Pressable style={styles.button} onPress={handleSubmit}>
+                        <Text style={styles.buttonText}>LOGIN</Text>
                     </Pressable>
+                    <Text style={styles.optionsText}>FOLLOW US ON</Text>
                 </View>
-            </View>
-
-            <View style={styles.buttonView}>
-                <Pressable style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>LOGIN</Text>
-                </Pressable>
-                <Text style={styles.optionsText}>FOLLOW US ON</Text>
-            </View>
-            {/* <Image source={linkedin} style={styles.icons} /> */}
+                {/* <Image source={linkedin} style={styles.icons} /> */}
 
                 <View style={styles.mediaIcons}>
                     <Pressable onPress={() => { Linking.openURL('https://www.instagram.com/shamiri_institute/'); }}>
@@ -90,10 +93,11 @@ export default function LoginForm({ navigation }) {
                     </Pressable>
                 </View>
 
-            <Text style={styles.footerText}>Don't Have Account?<TouchableOpacity onPress={() => navigation.navigate('register')}><Text style={styles.signup} >  Sign Up</Text></TouchableOpacity></Text>
+                <Text style={styles.footerText}>Don't Have Account?<Pressable onPress={() => navigation.navigate('register')}><Text style={styles.signup} >  Sign Up</Text></Pressable></Text>
 
 
-        </SafeAreaView>
+            </ScrollView>
+        </>
     )
 }
 
