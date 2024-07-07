@@ -24,10 +24,25 @@ export default function LoginForm({ navigation }) {
             body: JSON.stringify(data)
         })
         const result = await response.json();
-        setData(result)
-        // console.log(data)
-        result ?  navigation.navigate('userDashboard') : Alert.alert('Login Failed')
+        setResponseData(result)
+
+        if (response.ok) {
+            AsyncStorage.setItem('token', JSON.stringify(result))
+
+            AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
+            navigation.navigate('userDashboard')
+        }
     }
+
+    async function getData() {
+        const data = await AsyncStorage.getItem('isLoggedIn')
+        console.log(data, 'at App.js');
+    }
+
+    useEffect(() => {
+        getData();
+        console.log("Hii");
+    }, [])
 
     return (
         <SafeAreaView style={styles.container}>
