@@ -10,23 +10,6 @@ export default function LoginForm({ navigation }) {
         email: '', password: ''
     });
 
-        const handleInstagramPress = () => {
-            Linking.openURL('https://www.instagram.com/shamiri_institute/');
-        };
-
-        const handleXPress = () => {
-            Linking.openURL('https://www.twitter.com/shamiriteam');
-        };
-
-        const handleLinkedInPress = () => {
-            Linking.openURL('https://www.linkedin.com/company/shamiri-institute/');
-        };
-
-        const handleYouTubeInPress = () => {
-            Linking.openURL('https://www.youtube.com/@shamiriinstitute');
-        };
-
-
     const handleInputChange = (value, field) => {
         setData(prevState => ({ ...prevState, [field]: value }));
         };
@@ -77,20 +60,20 @@ export default function LoginForm({ navigation }) {
             </View>
             {/* <Image source={linkedin} style={styles.icons} /> */}
 
-            <View style={styles.mediaIcons}>
-                <TouchableOpacity onPress={handleInstagramPress}>
-                    <FontAwesome6 name="instagram" size={40} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleXPress}>
-                    <FontAwesome6 name="x-twitter" size={40} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleLinkedInPress}>
-                    <FontAwesome6 name="linkedin" size={40} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleYouTubeInPress}>
-                    <FontAwesome6 name="youtube" size={40} color="black" />
-                </TouchableOpacity>
-            </View>
+                <View style={styles.mediaIcons}>
+                    <Pressable onPress={() => { Linking.openURL('https://www.instagram.com/shamiri_institute/'); }}>
+                        <FontAwesome6 name="instagram" size={40} color="black" />
+                    </Pressable>
+                    <Pressable onPress={() => { Linking.openURL('https://www.twitter.com/shamiriteam'); }}>
+                        <FontAwesome6 name="x-twitter" size={40} color="black" />
+                    </Pressable>
+                    <Pressable onPress={() => { Linking.openURL('https://www.linkedin.com/company/shamiri-institute/') }}>
+                        <FontAwesome6 name="linkedin" size={40} color="black" />
+                    </Pressable>
+                    <Pressable onPress={() => { Linking.openURL('https://www.youtube.com/@shamiriinstitute'); }}>
+                        <FontAwesome6 name="youtube" size={40} color="black" />
+                    </Pressable>
+                </View>
 
             <Text style={styles.footerText}>Don't Have Account?<TouchableOpacity onPress={() => navigation.navigate('register')}><Text style={styles.signup} >  Sign Up</Text></TouchableOpacity></Text>
 
