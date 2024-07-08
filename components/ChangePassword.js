@@ -6,6 +6,7 @@ export default function ChangePassword({ navigation, userData }) {
     const [passwordData, setPasswordData] = useState({
         oldPassword: '', newPassword: ''
     });
+    const [isPasswordAccordionOpen, setIsPasswordAccordionOpen] = useState(false);
 
     //   console.log(userData.map((user) => user.id))
 
