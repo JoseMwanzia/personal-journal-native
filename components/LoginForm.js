@@ -4,7 +4,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
-const logo = require("../assets/Insighter.png")
+const logo = require("../assets/shamirilogo.png")
 
 
 export default function LoginForm({userData}) {
@@ -60,7 +60,6 @@ export default function LoginForm({userData}) {
             <ScrollView keyboardShouldPersistTaps={'always'} contentContainerStyle={styles.container}>
 
                 <Image source={logo} style={styles.image} resizeMode='contain' />
-                <Text style={styles.title}>Login</Text>
                 <View style={styles.inputView}>
                     <TextInput style={styles.input} placeholder='EMAIL' value={data.email} onChangeText={(text) => handleInputChange(text, 'email')} autoCorrect={false}
                         autoCapitalize='none' />
