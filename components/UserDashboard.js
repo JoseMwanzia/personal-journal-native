@@ -106,7 +106,6 @@ const UserDashboard = ({ route }) => {
         </ScrollView>
     ));
 
-    )
     return (
     <>
     {user}
