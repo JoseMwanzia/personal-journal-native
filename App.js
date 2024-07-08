@@ -101,6 +101,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  imageContainer: {
+    flex: 1,
+    paddingTop: 58,
+  },
+  footerContainer: {
+    flex: 1 / 3,
+    alignItems: 'center',
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    padding: 10,
+    borderWidth: 1,
   },
 });
