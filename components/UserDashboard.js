@@ -9,21 +9,57 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
 const UserDashboard = ({ route }) => {
-    const userData = route.params?.userData
+    const user = userData.map((user) => (
+        <ScrollView key={user.id} contentContainerStyle={styles.container}>
+            <View style={styles}>
+                <Text style={styles.text}> Hi, {user.name}!</Text>
+            </View>
+            <View style={styles.textAreaContainer}>
+                <TextInput
+                    style={styles.titleText}
+                    placeholder="Title for your entry!"
+                    placeholderTextColor="grey"
+                    value={data.title}
+                    onChangeText={(text) => handleInputChange(text, "title")}
+                    multiline={true}
+                />
+            </View>
+            <View style={styles.textAreaContainer}>
+                <TextInput
+                    style={styles.textArea}
+                    underlineColorAndroid="transparent"
+                    placeholder="Put your thought here!"
+                    placeholderTextColor="grey"
+                    value={data.content}
+                    onChangeText={(text) => handleInputChange(text, "content")}
+                    multiline={true}
 
-    console.log(userData.map(user => user));
+                />
+            </View>
 
-    const user = userData.map(user => 
-         (
-            <ScrollView key={user.id} contentContainerStyle={styles.container}>
-                <View style={styles.container}>
-                    <Text style={styles.text}> Welcome {user.name} to your dashboard!</Text>
-                </View>
-                <View  style={styles.container}>
-                    <Logout/>
-                </View>
-            </ScrollView>
-        )
+            <View style={styles.container2}>
+
+                    <RNPickerSelect
+
+                        onValueChange={(text) => handleInputChange(text, "category")}
+                        items={categories}
+                        // value={data.category !== null ? data.category : ""}
+                        placeholder={{ label: "Select a category", value: "", color: 'red' }}
+                        fixAndroidTouchableBug={true}
+                    />
+
+
+                <Pressable onPress={handleSubmit} style={styles.button2}>
+                    <Text style={styles.buttonText2} >Create</Text>
+                </Pressable>
+            </View>
+
+            <View>
+                <CreatedJournals userData={userData} />
+            </View>
+
+        </ScrollView>
+    ));
 
     )
     return (
