@@ -49,11 +49,50 @@ export default function App() {
   useEffect(() => {
     getData();
   }, [isLoggedIn]);
+
+
+
+  function Root() {
+    return (
+      <Drawer.Navigator>
+        <Stack.Screen name="login" component={LoginForm} initialParams={{ userData: userData }}/>
+        <Stack.Screen name="register" component={Register} />
+      </Drawer.Navigator>
+    );
+  }
+
+
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <SafeAreaProvider>
+
+        {isLoggedIn ? (
+          <>
+            <Header userData={userData} />
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+              }}>
+              <Stack.Screen name="userDashboard" component={UserDashboard} initialParams={{ userData: userData }} />
+              <Stack.Screen name="logout" component={Logout} />
+
+            </Stack.Navigator>
+          </>
+        ) : (
+          <>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+              }}>
+
+              <Stack.Screen name="root" component={Root} />
+            </Stack.Navigator>
+          </>
+        )}
+      </SafeAreaProvider>
+      <StatusBar style="dark" />
+    </NavigationContainer>
   );
 }
 
