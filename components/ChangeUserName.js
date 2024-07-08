@@ -1,5 +1,11 @@
+import React, { useState } from 'react';
+import { View, Button, StyleSheet, Alert } from 'react-native';
+import { Input } from 'react-native-elements';
+
 export default function ChangeUserName({ navigation, userData }) {
     const [name, setName] = useState('');
+    const [isUsernameAccordionOpen, setIsUsernameAccordionOpen] = useState(false);
+
     //   console.log(userData.map((user) => user.id))
     const handleChangeUsername = async () => {
         const id = userData.map((user) => user.id)
