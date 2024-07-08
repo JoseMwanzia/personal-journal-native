@@ -28,6 +28,27 @@ export default ({ userData }) => {
         fetchUserJournals()
     }, [])
 
+
+    async function handleDeleteEntry(journalId) {
+        const id = userData.map((user) => user.id);
+        try {
+            const response = await fetch(`http://192.168.100.166:3000/delete/${parseInt(id)}/${parseInt(journalId)}`, {
+                method: "DELETE"
+            })
+            const result = await response.json()
+            console.log(result);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    if (loading) {
+        <View style={[styles.container, styles.horizontal]}>
+            <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+        return;
+    }
+
     // console.log(data.map((entry) => entry.id));
 
     const entry = data.map((entry) => (
