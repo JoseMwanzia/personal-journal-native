@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Alert, Image, Pressable, StyleSheet, Switch, Text, TextInput, View, Linking, ScrollView } from 'react-native'
 import { FontAwesome6 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const logo = require("../assets/Insighter.png")
 
 
-export default function LoginForm() {
+export default function LoginForm({userData}) {
+    const navigation = useNavigation()
     const [click, setClick] = useState(false);
-    const [responseData, setResponseData] = useState({});
     const [data, setData] = useState({
         email: '', password: ''
     });
@@ -18,23 +19,30 @@ export default function LoginForm() {
     };
 
     async function handleSubmit() {
-        const response = await fetch('http://127.0.0.1:3000/login', {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data)
-        })
-        const result = await response.json();
-        setResponseData(result)
+        try {
+            const response = await fetch('http://192.168.100.166:3000/login', {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data)
+            })
+            const result = await response.json();
 
-        if (response.ok) {
-            AsyncStorage.setItem('token', JSON.stringify(result))
+            if (response.ok) {
+                AsyncStorage.setItem('token', JSON.stringify(result))
 
-            AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
-            navigation.navigate('userDashboard')
+                AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
+                navigation.navigate('root', { screen: 'userDashboard' })
+            } else {
+                throw new Error(result.message || 'Something went wrong');
+            }
+
+        } catch (error) {
+            console.error(error);
         }
+
     }
 
     async function getData() {
