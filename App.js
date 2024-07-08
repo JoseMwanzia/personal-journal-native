@@ -19,6 +19,7 @@ const Drawer = createNativeStackNavigator();
 
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
@@ -38,6 +39,16 @@ export default function App() {
 
     fetchData();
   }, []);
+
+  async function getData() {
+    const data = await AsyncStorage.getItem('isLoggedIn');
+    // console.log(data, 'at app.jsx');
+    setIsLoggedIn(data);
+  }
+
+  useEffect(() => {
+    getData();
+  }, [isLoggedIn]);
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
