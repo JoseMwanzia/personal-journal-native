@@ -239,6 +239,26 @@ router.get('/journal/:userId', async (ctx) => {
   }
 });
 
+// delete specific user's journal route
+router.delete('/delete/:userId/:journalId', async (ctx) => {
+  const { userId, journalId } = ctx.params;
+
+  try {
+    const sql = 'DELETE FROM journals WHERE user_id = ? AND id = ?';
+    const result = await db.query(sql, [userId, journalId]);
+
+
+      ctx.status = 200;
+      ctx.body = result;
+
+      ctx.status = 404;
+      ctx.body = { message: 'Journal entry not found' };
+
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = { message: err.message };
+  }
+});
 app
   .use(router.routes())
   .use(router.allowedMethods());
