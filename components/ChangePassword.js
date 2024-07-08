@@ -6,6 +6,9 @@ export default function ChangePassword({ navigation, userData }) {
     const [passwordData, setPasswordData] = useState({
         oldPassword: '', newPassword: ''
     });
+    const handleInputChange = (value, field) => {
+        setPasswordData(prevState => ({ ...prevState, [field]: value }));
+    };
     return (
 
 
