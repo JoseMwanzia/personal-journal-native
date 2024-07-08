@@ -1,14 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
-import Logout from './Logout';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-
-
-
-const Stack = createNativeStackNavigator();
+import React, { useState } from "react";
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TextInput,
+    Pressable,
+} from "react-native";
+import RNPickerSelect from "react-native-picker-select";
+import CreatedJournals from "./CreatedJournals";
 
 const UserDashboard = ({ route }) => {
+    const userData = route.params?.userData;
+
+    const [data, setData] = useState({
+        title: "",
+        content: "",
+        category: "",
+    });
+
+    const categories = [
+        { label: "Personal", value: "personal" },
+        { label: "Travel", value: "travel" },
+        { label: "Work", value: "work" },
+        { label: "Miscellaneous", value: "miscellaneous" },
+    ];
+
+    const handleInputChange = (value, name) => {
+        setData({ ...data, [name]: value });
+    };
+
+    async function handleSubmit() {
+        const id = userData.map((user) => user.id);
+
+        try {
+            const response = await fetch(
+                `http://192.168.100.166:3000/journal/${parseInt(id)}`,
+                {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                }
+            );
+
+            setData({ title: "", content: "", category: "" }); // when successfull reset state
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const user = userData.map((user) => (
         <ScrollView key={user.id} contentContainerStyle={styles.container}>
             <View style={styles}>
