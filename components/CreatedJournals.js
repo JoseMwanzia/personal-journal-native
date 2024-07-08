@@ -27,3 +27,47 @@ export default ({ userData }) => {
         }
         fetchUserJournals()
     }, [])
+
+    // console.log(data.map((entry) => entry.id));
+
+    const entry = data.map((entry) => (
+        <ListItem
+            Component={TouchableHighlight}
+            containerStyle={{ marginBottom: 10, width: 350, height: 150 }}
+            disabledStyle={{ opacity: 0.5 }}
+            onLongPress={() => console.log("onLongPress()")}
+            onPress={() => console.log("onPress()")} // Fixed onPress event handler
+            pad={20}
+            key={entry.id}
+
+        >
+            <Pressable>
+                <FontAwesome name="edit" size={24} color="black" />
+            </Pressable>
+
+            <ListItem.Content>
+                <ListItem.Title>
+                    {entry.category} {/* Text component directly inside ListItem.Title */}
+                </ListItem.Title>
+                <View style={styles.separator} />
+                <ListItem.Title>
+                    {entry.title} {/* Text component directly inside ListItem.Title */}
+                </ListItem.Title>
+                <ListItem.Subtitle>
+                    {entry.content} {/* Text component directly inside ListItem.Subtitle */}
+                </ListItem.Subtitle>
+            </ListItem.Content>
+
+            <Pressable onPress={() => handleDeleteEntry(entry.id)}>``
+                <FontAwesome6 name="delete-left" size={24} color="black" />
+            </Pressable>
+
+        </ListItem>
+    ))
+
+    return (
+        <>
+            {entry}
+        </>
+    );
+};
