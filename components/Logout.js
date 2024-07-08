@@ -2,14 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react'
 import { Text, StyleSheet, Pressable } from 'react-native'
 
-export default function Logout() {
+export default function Logout({ navigation }) {
 
     async function handelLogout() {
         AsyncStorage.setItem('isLoggedIn', '')
         AsyncStorage.setItem('token', '')
-        navigation.navigate('login')
+        navigation.replace('login')
 
-        const response = await fetch('http://127.0.0.1:3000/logout', {
+        const response = await fetch('http://192.168.100.166:3000/logout', {
             method: "DELETE"
         })
         const result = await response.json();
@@ -17,7 +17,7 @@ export default function Logout() {
     }
 
     return (
-        <Pressable style={styles.button} onPress={() => handelLogout()}>
+        <Pressable style={styles.button} onPress={handelLogout}>
             <Text style={styles.buttonText}>Logout</Text>
         </Pressable>
     )
