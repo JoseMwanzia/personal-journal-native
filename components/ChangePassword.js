@@ -6,9 +6,38 @@ export default function ChangePassword({ navigation, userData }) {
     const [passwordData, setPasswordData] = useState({
         oldPassword: '', newPassword: ''
     });
+
+    //   console.log(userData.map((user) => user.id))
+
     const handleInputChange = (value, field) => {
         setPasswordData(prevState => ({ ...prevState, [field]: value }));
     };
+
+    const handleChangePassword = async () => {
+
+        const id = userData.map((user) => user.id)
+
+        try {
+            const response = await fetch(`http://192.168.100.166:3000/password/${parseInt(id)}`, {
+                method: 'PUT',
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(passwordData),
+            });
+
+            if (response.ok) {
+
+                alert("Success changing password!")
+            }
+
+        } catch (error) {
+            console.error(error);
+
+        }
+    };
+
     return (
 
 
@@ -37,3 +66,4 @@ export default function ChangePassword({ navigation, userData }) {
             )}
         </View>
     );
+}
