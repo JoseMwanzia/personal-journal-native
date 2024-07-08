@@ -108,21 +108,20 @@ const UserDashboard = ({ route }) => {
 
     )
     return (
-        <>
-            {user}
-
-        </>
-    );
+    <>
+    {user}
+    </>
+    )
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+        // flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
     text: {
-        fontSize: 20
+        fontSize: 20,
     },
     button: {
         backgroundColor: "red",
@@ -131,7 +130,68 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+    },
+    textAreaContainer: {
+        margin: 8,
+    },
+    textArea: {
+        height: 150,
+        width: 350,
+        justifyContent: "flex-start",
+
+
+        borderColor: '#000', // Border color
+        borderWidth: 1, // Border width
+        borderRadius: 5, // Optional: Border radius for rounded corners
+        paddingLeft: 10, // Optional: Padding inside the input
+        paddingTop: 5, // Optional: Padding inside the input
+
+    },
+    titleText: {
+        height: 30,
+        width: 350,
+        justifyContent: "flex-start",
+
+        borderColor: '#000', // Border color
+        borderWidth: 1, // Border width
+        borderRadius: 5, // Optional: Border radius for rounded corners
+        paddingLeft: 10, // Optional: Padding inside the input
+        paddingTop: 5, // Optional: Padding inside the input
+    },
+    button: {
+        backgroundColor: "red",
+        height: 25,
+        borderColor: "gray",
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        width: '100px',
+        margin: '10px'
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 18,
+        fontWeight: "bold"
+    },
+
+    container2: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    button2: {
+        backgroundColor: '#007bff',
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 5,
+        margin: 4,
+    },
+    buttonText2: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 
