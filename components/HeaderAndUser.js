@@ -1,23 +1,15 @@
 import React from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import UserDashboard from './UserDashboard';
 import Header from './Header';
 
-const HeaderAndUser = ({ route }) => {
-    const userData = route.params?.userData;
+const HeaderAndUser = () => {
 
-    if (!userData) {
-        return (
-            <View style={styles.vertical}>
-                <ActivityIndicator size="large" color="red" />
-            </View>
-        )
-    }
 
     return (
         <View style={styles.container}>
-            <Header userData={userData} />
-            <UserDashboard userData={userData} />
+            <Header/>
+            <UserDashboard/>
         </View>
     );
 };
