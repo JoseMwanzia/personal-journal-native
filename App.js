@@ -51,19 +51,14 @@ export default function App() {
         <Stack.Screen
           name="headerAndUser"
           component={HeaderAndUser}
-          initialParams={{userData: userData}}
-        />
-
-        {/* <Stack.Screen
-          name="Header"
-          component={Header}
         />
 
         <Stack.Screen
-          name="userDashboard"
-          component={UserDashboard}
-          initialParams={{ userData: userData }}
-        /> */}
+          name="Logout"
+          component={Logout}
+        />
+
+
 
         <Stack.Screen
           name="LoginUser"
