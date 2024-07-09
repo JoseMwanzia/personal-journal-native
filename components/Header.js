@@ -50,8 +50,8 @@ const App = ({ userData }) => {
                                 '../assets/avatar.png'
                         }}
                     />
-                    <ChangeUserName userData={userData} />
-                    <ChangePassword userData={userData} />
+                    <ChangeUserName userData={userData} setVisible={setVisible} />
+                    <ChangePassword userData={userData} setVisible={setVisible}/>
                     <View style={styles.separator} />
                     <Logout setVisible={setVisible}/>
                 </View>
