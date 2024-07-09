@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, Alert } from 'react-native';
+import { View, Button, StyleSheet, Alert, Text } from 'react-native';
 import { Input } from 'react-native-elements';
 
-export default function ChangePassword({ navigation, userData }) {
+export default function ChangePassword({ navigation, userData, setVisible }) {
     const [passwordData, setPasswordData] = useState({
         oldPassword: '', newPassword: ''
     });
+    const [error, setError] = useState('');
     const [isPasswordAccordionOpen, setIsPasswordAccordionOpen] = useState(false);
 
     //   console.log(userData.map((user) => user.id))
@@ -29,8 +30,14 @@ export default function ChangePassword({ navigation, userData }) {
             });
 
             if (response.ok) {
+                setVisible(false)
+                Alert.alert("Success changing password!") || alert("Success changing password!")
+            }
 
-                alert("Success changing password!")
+            const result = await response.json()
+
+            if (!result.ok) {
+                setError(result.message);
             }
 
         } catch (error) {
@@ -52,17 +59,20 @@ export default function ChangePassword({ navigation, userData }) {
                 <View style={styles.accordion}>
                     <Input
                         placeholder="Enter old Password"
+                        secureTextEntry
                         value={passwordData.oldPassword}
                         onChangeText={(text) => handleInputChange(text, 'oldPassword')}
                         containerStyle={{ marginBottom: 10 }}
                     />
                     <Input
                         placeholder="Enter new Password"
+                        secureTextEntry
                         value={passwordData.newPassword}
                         onChangeText={(text) => handleInputChange(text, 'newPassword')}
                         containerStyle={{ marginBottom: 10 }}
                     />
                     <Button title="Submit" onPress={handleChangePassword} />
+                    {error && <Text style={{color: 'red'}}>{error}</Text>}
                 </View>
             )}
         </View>
