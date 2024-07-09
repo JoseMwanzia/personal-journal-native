@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, Alert } from 'react-native';
+import { View, Button, StyleSheet, Alert, Text } from 'react-native';
 import { Input } from 'react-native-elements';
 
-export default function ChangeUserName({ navigation, userData }) {
+export default function ChangeUserName({ navigation, userData, setVisible }) {
     const [name, setName] = useState('');
+    const [error, setError] = useState('');
     const [isUsernameAccordionOpen, setIsUsernameAccordionOpen] = useState(false);
 
     //   console.log(userData.map((user) => user.id))
@@ -20,13 +21,17 @@ export default function ChangeUserName({ navigation, userData }) {
             });
 
             if (response.ok) {
-
-                alert("Success changing username!")
+                setVisible(false)
+                Alert.alert("Success changing username!") || alert("Success changing username!")
             }
 
+            const result = await response.json()
+
+            if (!result.ok) {
+                setError(result.message);
+            }
         } catch (error) {
             console.error(error);
-
         }
     };
 
@@ -46,6 +51,8 @@ export default function ChangeUserName({ navigation, userData }) {
                             // containerStyle={{ marginBottom: 10 }}
                         />
                         <Button title="Submit" onPress={handleChangeUsername} />
+                        
+                        {error && <Text style={{color: 'red'}}>{error}</Text>}
                     </View>
                 )}
             </View>
