@@ -11,25 +11,27 @@ import Register from './components/Register';
 import Header from './components/Header';
 import ChangeUserName from './components/ChangeUserName';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-
-
-const Stack = createNativeStackNavigator();
-const Drawer = createNativeStackNavigator();
+import HeaderAndUser from './components/HeaderAndUser';
 
 
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
-    // Example: Fetch user data from AsyncStorage or an API
+    
     const fetchData = async () => {
       try {
-        const storedUserData = await AsyncStorage.getItem('token');
 
-        if (storedUserData) {
-          setUserData(JSON.parse(storedUserData));
+        const storedUserData = await AsyncStorage.getItem('token');
+        const parsedId = JSON.parse(storedUserData).map((user) => user.id)
+
+        const response = await fetch(`http://192.168.100.166:3000/user/${parseInt(parsedId)}`)
+        const result = await response.json()
+
+        if (response.ok) {
+          setUserData(result);
         }
 
       } catch (error) {
@@ -52,45 +54,86 @@ export default function App() {
 
 
 
-  function Root() {
+
+  const StackNav = () => {
+    const navigation = useNavigation();
+    const Stack = createNativeStackNavigator();
+
     return (
-      <Drawer.Navigator>
-        <Stack.Screen name="login" component={LoginForm} initialParams={{ userData: userData }}/>
-        <Stack.Screen name="register" component={Register} />
+      <Stack.Navigator
+        screenOptions={{
+          statusBarColor: '#0163d2',
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: '#0163d2',
+          },
+          headerTintColor: '#fff',
+          headerTitleAlign: 'center',
+        }}>
+
+        <Stack.Screen
+          name="headerAndUser"
+          component={HeaderAndUser}
+          initialParams={{userData: userData}}
+        />
+
+        {/* <Stack.Screen
+          name="Header"
+          component={Header}
+        />
+
+        <Stack.Screen
+          name="userDashboard"
+          component={UserDashboard}
+          initialParams={{ userData: userData }}
+        /> */}
+
+        <Stack.Screen
+          name="LoginUser"
+          component={LoginNav}
+        />
+
+      </Stack.Navigator>
+    );
+  };
+
+
+
+  function DrawerNav() {
+    const Drawer = createNativeStackNavigator();
+
+    return (
+      <Drawer.Navigator
+        drawerContent={props => <DrawerContent {...props} />}
+      >
+        <Drawer.Screen name="dashboard" component={StackNav} options={{ headerShown: false }} />
       </Drawer.Navigator>
     );
   }
 
 
 
+  const LoginNav = () => {
+    const Stack = createNativeStackNavigator();
+
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false
+        }}>
+        <Stack.Screen name="Login" component={LoginForm} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Home" component={DrawerNav} />
+      </Stack.Navigator>
+    );
+  };
+
+
   return (
     <NavigationContainer>
-      <SafeAreaProvider>
 
-        {isLoggedIn ? (
-          <>
-            <Header userData={userData} />
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-              }}>
-              <Stack.Screen name="userDashboard" component={UserDashboard} initialParams={{ userData: userData }} />
-              <Stack.Screen name="logout" component={Logout} />
+        {isLoggedIn ? <DrawerNav /> : <LoginNav />}
 
-            </Stack.Navigator>
-          </>
-        ) : (
-          <>
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-              }}>
-
-              <Stack.Screen name="root" component={Root} />
-            </Stack.Navigator>
-          </>
-        )}
-      </SafeAreaProvider>
       <StatusBar style="dark" />
     </NavigationContainer>
   );
