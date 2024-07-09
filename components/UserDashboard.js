@@ -6,18 +6,22 @@ import {
     ScrollView,
     TextInput,
     Pressable,
+    ActivityIndicator
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import CreatedJournals from "./CreatedJournals";
 
-const UserDashboard = ({ route }) => {
-    const userData = route.params?.userData;
+const UserDashboard = ({ userData }) => {
+    // const userData = route.params?.userData;
+
 
     const [data, setData] = useState({
         title: "",
         content: "",
         category: "",
     });
+
+
 
     const categories = [
         { label: "Personal", value: "personal" },
@@ -54,6 +58,14 @@ const UserDashboard = ({ route }) => {
         }
     }
 
+    if (!userData) {
+        return (
+            <View style={[styles.container, styles.horizontal]}>
+                <ActivityIndicator size="large" color="#00ff00" />
+            </View>
+        )
+    }
+
     const user = userData.map((user) => (
         <ScrollView key={user.id} contentContainerStyle={styles.container}>
             <View style={styles}>
@@ -84,14 +96,14 @@ const UserDashboard = ({ route }) => {
 
             <View style={styles.container2}>
 
-                    <RNPickerSelect
+                <RNPickerSelect
 
-                        onValueChange={(text) => handleInputChange(text, "category")}
-                        items={categories}
-                        // value={data.category !== null ? data.category : ""}
-                        placeholder={{ label: "Select a category", value: "", color: 'red' }}
-                        fixAndroidTouchableBug={true}
-                    />
+                    onValueChange={(text) => handleInputChange(text, "category")}
+                    items={categories}
+                    // value={data.category !== null ? data.category : ""}
+                    placeholder={{ label: "Select a category", value: "", color: 'red' }}
+                    fixAndroidTouchableBug={true}
+                />
 
 
                 <Pressable onPress={handleSubmit} style={styles.button2}>
@@ -107,9 +119,9 @@ const UserDashboard = ({ route }) => {
     ));
 
     return (
-    <>
-    {user}
-    </>
+        <>
+            {user}
+        </>
     )
 };
 
