@@ -101,7 +101,7 @@ export default function LoginForm({props}) {
                     </Pressable>
                 </View>
 
-                <Text style={styles.footerText}>Don't Have Account?<Pressable onPress={() => navigation.navigate('register')}><Text style={styles.signup} >  Sign Up</Text></Pressable></Text>
+                <Text style={styles.footerText}>Don't Have Account?<Pressable onPress={() => navigation.navigate('Register')}><Text style={styles.signup} >  Sign Up</Text></Pressable></Text>
 
 
             </ScrollView>

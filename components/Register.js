@@ -45,7 +45,7 @@ export default function Register({ navigation }) {
                 </Pressable>
             </View>
 
-            <Text style={styles.footerText}>Already have an account?<TouchableOpacity onPress={() => navigation.navigate('login')}><Text style={styles.signup} >  login</Text></TouchableOpacity></Text>
+            <Text style={styles.footerText}>Already have an account?<TouchableOpacity onPress={() => navigation.navigate('Login')}><Text style={styles.signup} >  login</Text></TouchableOpacity></Text>
 
 
         </SafeAreaView>
