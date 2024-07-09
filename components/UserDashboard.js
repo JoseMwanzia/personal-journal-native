@@ -11,6 +11,7 @@ import {
 import RNPickerSelect from "react-native-picker-select";
 import CreatedJournals from "./CreatedJournals";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Header from "./Header";
 
 const UserDashboard = ({  }) => {
     // const userData = route.params?.userData;
@@ -92,6 +93,8 @@ const UserDashboard = ({  }) => {
     }
 
     const user = userData.map((user) => (
+    <>
+            <Header userData={userData}/>
         <ScrollView key={user.id} contentContainerStyle={styles.container}>
             <View style={styles}>
                 <Text style={styles.text}> Hi, {user.name}!</Text>
@@ -141,6 +144,7 @@ const UserDashboard = ({  }) => {
             </View>
 
         </ScrollView>
+        </>
     ));
 
     return (
