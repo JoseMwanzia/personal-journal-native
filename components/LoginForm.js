@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const logo = require("../assets/shamirilogo.png")
 
 
-export default function LoginForm({userData}) {
+export default function LoginForm({props}) {
     const navigation = useNavigation()
     const [click, setClick] = useState(false);
     const [data, setData] = useState({
@@ -34,7 +34,7 @@ export default function LoginForm({userData}) {
                 AsyncStorage.setItem('token', JSON.stringify(result))
 
                 AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
-                navigation.navigate('root', { screen: 'userDashboard' })
+                navigation.navigate('Home' )
             } else {
                 throw new Error(result.message || 'Something went wrong');
             }
