@@ -1,13 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
 import { Text, StyleSheet, Pressable } from 'react-native'
 
-export default function Logout({ navigation }) {
+export default function Logout({ setVisible }) {
+    const navigation = useNavigation()
+
+    console.log(setVisible);
 
     async function handelLogout() {
         AsyncStorage.setItem('isLoggedIn', '')
         AsyncStorage.setItem('token', '')
-        navigation.replace('login')
+        navigation.navigate('LoginUser')
+        setVisible(false)
 
         const response = await fetch('http://192.168.100.166:3000/logout', {
             method: "DELETE"

@@ -53,7 +53,7 @@ const App = ({ userData }) => {
                     <ChangeUserName userData={userData} />
                     <ChangePassword userData={userData} />
                     <View style={styles.separator} />
-                    <Logout />
+                    <Logout setVisible={setVisible}/>
                 </View>
             </Overlay>
         </View>
