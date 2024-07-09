@@ -17,30 +17,7 @@ import HeaderAndUser from './components/HeaderAndUser';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState([]);
-
-  useEffect(() => {
-    
-    const fetchData = async () => {
-      try {
-
-        const storedUserData = await AsyncStorage.getItem('token');
-        const parsedId = JSON.parse(storedUserData).map((user) => user.id)
-
-        const response = await fetch(`http://192.168.100.166:3000/user/${parseInt(parsedId)}`)
-        const result = await response.json()
-
-        if (response.ok) {
-          setUserData(result);
-        }
-
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  
 
   async function getData() {
     const data = await AsyncStorage.getItem('isLoggedIn');

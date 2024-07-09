@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import CreatedJournals from "./CreatedJournals";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const UserDashboard = ({ userData }) => {
+const UserDashboard = ({  }) => {
     // const userData = route.params?.userData;
 
 
@@ -57,6 +58,30 @@ const UserDashboard = ({ userData }) => {
             console.error(error);
         }
     }
+
+    const [userData, setUserData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const storedUserData = await AsyncStorage.getItem('token');
+        const parsedId = JSON.parse(storedUserData).map((user) => user.id)
+
+        const response = await fetch(`http://192.168.100.166:3000/user/${parseInt(parsedId)}`)
+        const result = await response.json()
+
+        if (response.ok) {
+          setUserData(result);
+        }
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
     if (!userData) {
         return (
