@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Linking, TouchableOpacity } from 'react-native'
-const logo = require("../assets/Insighter.png")
+const logo = require("../assets/shamirilogo.png")
 
 
 export default function Register({ navigation }) {
