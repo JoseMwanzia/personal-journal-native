@@ -6,7 +6,7 @@ import ChangeUserName from './ChangeUserName';
 import ChangePassword from './ChangePassword';
 
 
-const App = ({ userData }) => {
+const App = ({ userId, onHandleUpdatedName }) => {
     const [visible, setVisible] = useState(false);
 
     const toggleOverlay = () => {
@@ -14,7 +14,7 @@ const App = ({ userData }) => {
     };
 
     return (
-        <View style={{}}>
+        <View>
             <Header
                 backgroundColor="black"
                 backgroundImageStyle={{}}
@@ -50,8 +50,8 @@ const App = ({ userData }) => {
                                 '../assets/avatar.png'
                         }}
                     />
-                    <ChangeUserName userData={userData} setVisible={setVisible} />
-                    <ChangePassword userData={userData} setVisible={setVisible}/>
+                    <ChangeUserName userId={userId} setVisible={setVisible} onHandleUpdatedName={onHandleUpdatedName} />
+                    <ChangePassword userId={userId} setVisible={setVisible}/>
                     <View style={styles.separator} />
                     <Logout setVisible={setVisible}/>
                 </View>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         left: 0,
         top: 0,
         bottom: 0,
-        width: '80%',
+        width: '75%',
         padding: 0,
         backgroundColor: 'white',
         elevation: 5,
