@@ -4,6 +4,7 @@ const logo = require("../assets/shamirilogo.png")
 
 
 export default function Register({ navigation }) {
+    const [error, setError] = useState()
     const [data, setData] = useState({
        name:'', email: '', password: ''
     });
@@ -22,7 +23,14 @@ export default function Register({ navigation }) {
             body: JSON.stringify(data),
         })
         const result = await response.json();
-        result ? (setData(result), navigation.navigate('Login'), Alert.alert('You have successfully signeed up!')) : Alert.alert(`${<Text style={{color: 'red'}}>'Registration Failed!'</Text>}`)
+
+
+        if (result.ok) {
+            navigation.navigate('Login');
+            Alert.alert('You have successfully signed up!')
+        } else {
+            setError(result.message)
+        }
     }
 
     return (
@@ -40,6 +48,7 @@ export default function Register({ navigation }) {
             </View>
 
             <View style={styles.buttonView}>
+                    {error && <Text style={{color: 'red', padding: 5}}>{error}</Text>}
                 <Pressable style={styles.button} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Register</Text>
                 </Pressable>
@@ -146,7 +155,7 @@ const styles = StyleSheet.create({
         color: "gray",
     },
     signup: {
-        color: "red",
+        color: "indigo",
         fontSize: 15
     }
 })
