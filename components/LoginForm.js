@@ -10,6 +10,7 @@ const logo = require("../assets/shamirilogo.png")
 export default function LoginForm({props}) {
     const navigation = useNavigation()
     const [click, setClick] = useState(false);
+    const [error, setError] = useState();
     const [data, setData] = useState({
         email: '', password: ''
     });
@@ -40,15 +41,17 @@ export default function LoginForm({props}) {
             }
 
         } catch (error) {
-            console.error(error);
+            console.error(error.message);
+            setError(error.message)
         }
-
     }
+
 
     async function getData() {
         const data = await AsyncStorage.getItem('isLoggedIn')
         console.log(data, 'at App.js');
     }
+
 
     useEffect(() => {
         getData();
@@ -79,6 +82,7 @@ export default function LoginForm({props}) {
                 </View>
 
                 <View style={styles.buttonView}>
+                    {error && <Text style={{color: 'red', padding: 10}}>{error}</Text>}
                     <Pressable style={styles.button} onPress={handleSubmit}>
                         <Text style={styles.buttonText}>LOGIN</Text>
                     </Pressable>
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
     },
     forgetText: {
         fontSize: 11,
-        color: "red"
+        color: "indigo"
     },
     button: {
         backgroundColor: "#0675bd",
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
         color: "gray",
     },
     signup: {
-        color: "red",
+        color: "indigo",
         fontSize: 13
     }
 })
