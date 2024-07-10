@@ -26,6 +26,7 @@ const UserDashboard = ({ }) => {
         category: "",
     });
     const [refreshing, setRefreshing] = useState(false);
+    const [updatedName, setUpdatedName] = useState();
 
     const onRefresh = useCallback(() => {
         setRefreshing(true)
@@ -74,6 +75,20 @@ const UserDashboard = ({ }) => {
             console.error(error);
         }
     }
+
+    // update username on the dashboard everytime the username is updated
+    useEffect(() => {
+        setUserData((prevData) => {
+            // console.log(prevData);
+            return { ...prevData, name: updatedName };
+        });
+    }, [updatedName]);
+
+
+    // Callback function to receive data from chnangeUsername child
+    const handleUpdatedName = (newUserName) => {
+        setUpdatedName(newUserName);
+    };
 
     // get user data and update every 3 seconds
     useEffect(() => {
