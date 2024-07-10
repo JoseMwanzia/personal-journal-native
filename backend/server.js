@@ -22,7 +22,7 @@ app.keys = ['your-session-secret'];
 
 const sessionConfig = {
   key: 'koa-session-id', // Name of the cookie to save session ID
-  maxAge: 86400000, // Session expires in 1 day (ms)
+  maxAge: null, // Session expires in 1 day (ms)
   overwrite: false, // Overwrite existing session data
   httpOnly: false, // Cookie accessible only via HTTP(S)
   signed: true, // Cookie is signed
@@ -47,12 +47,27 @@ const authMiddleware = async (ctx, next) => {
 // Registration route
 router.post('/register', async (ctx) => {
   const { name, email, password } = ctx.request.body;
+
+  if (!name || !email || !password) {
+    ctx.status = 400;
+    ctx.body = { message: 'Please create name, email and password' };
+    return;
+  } else if (!email || !password) {
+    ctx.status = 400;
+    ctx.body = { message: 'Please create email and password' };
+    return;
+  } else if ( !password) {
+    ctx.status = 400;
+    ctx.body = { message: 'Please create password' };
+    return;
+  }
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-    const result = await db.query(sql, [name, email, hashedPassword]);
+    await db.query(sql, [name, email, hashedPassword]);
     ctx.status = 201;
-    ctx.body = result;
+    ctx.body = {ok: true};
   } catch (err) {
     ctx.status = 500;
     ctx.body = err.message;
@@ -62,6 +77,13 @@ router.post('/register', async (ctx) => {
 // Login route
 router.post('/login', async (ctx) => {
   const { email, password } = ctx.request.body;
+
+  if (!email || !password ) {
+    ctx.status = 400;
+    ctx.body = { message: 'Please put your email and password' };
+    return;
+  }
+
   try {
     const sql = 'SELECT * FROM users WHERE email = ?';
     const result = await db.query(sql, [email]);
@@ -74,11 +96,11 @@ router.post('/login', async (ctx) => {
         ctx.body = JSON.stringify(result) // {userToken: user.id};
       } else {
         ctx.status = 401;
-        ctx.body = 'Invalid credentials';
+        ctx.body = {message: 'Invalid password!'}
       }
     } else {
       ctx.status = 401;
-      ctx.body = 'Invalid credentials';
+      ctx.body = {message: 'Invalid email!'}
     }
   } catch (err) {
     ctx.status = 500;
@@ -238,9 +260,14 @@ router.put('/password/:userId', async (ctx) => {
 router.post('/journal/:userId', async (ctx) => {
   const { title, content, category } = ctx.request.body;
   const userId = ctx.params.userId;
+
+  if (!title || !content || !category) {
+    ctx.status = 400;
+    ctx.body = { message: 'Please fill all the fields' };
+    return;
+  }
+
   try {
-    // await JournalEntry.query().insert({ userId: userId, title, content });
-    // ctx.body = { message: 'Journal entry created successfully' };
 
     const sql = 'INSERT INTO journals (title, content, category, user_id) VALUES (?, ?, ?, ?)';
     const result = await db.query(sql, [title, content, category, userId]);
