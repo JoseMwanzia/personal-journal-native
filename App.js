@@ -19,7 +19,7 @@ export default function App() {
 
   async function getData() {
     const data = await AsyncStorage.getItem('isLoggedIn');
-    // console.log(data, 'at app.jsx');
+    console.log(data, 'at app.js');
     setIsLoggedIn(data);
   }
 
@@ -71,9 +71,7 @@ export default function App() {
       </Stack.Navigator>
     );
   };
-
-
-
+  
   function DrawerNav() {
     const Drawer = createNativeStackNavigator();
 
@@ -85,8 +83,6 @@ export default function App() {
       </Drawer.Navigator>
     );
   }
-
-
 
   const LoginNav = () => {
     const Stack = createNativeStackNavigator();
