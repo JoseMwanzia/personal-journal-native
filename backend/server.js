@@ -112,7 +112,7 @@ router.get('/user/:userId', async (ctx) => {
     const sql = 'SELECT * FROM users WHERE id = ?';
     const user = await db.query(sql, [userId]);
 
-    ctx.body = user;
+    ctx.body = user[0];
   } catch (err) {
     ctx.status = 500;
     ctx.body = err.message;
@@ -136,10 +136,37 @@ router.put('/profile/:userId', async (ctx) => {
 
     if (result) {
       ctx.response.status = 200;
-      ctx.response.body = result.values[0]
+      ctx.response.body = result.values
     } else {
       ctx.status = 404;
       ctx.body = { message: 'User not found or not authorized' };
+    }
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = { message: err.message };
+  }
+});
+
+// Update journal
+router.put('/journal/:journalId', async (ctx) => {
+  const { title, content, category } = ctx.request.body;
+  const journalId = ctx.params.journalId;
+
+  if (!title || !content || !category) {
+    ctx.status = 400;
+    ctx.body = { message: 'No Changes made!' };
+  }
+
+  try {
+    const sql = 'UPDATE journals SET title = ?, content = ?, category = ? WHERE id = ?';
+    const result = pool.query(sql, [title, content, category, journalId]);
+
+    if (result) {
+      ctx.response.status = 200;
+      ctx.response.body = result.values
+    } else {
+      ctx.status = 404;
+      ctx.body = { message: 'Journal not found or not authorized' };
     }
   } catch (err) {
     ctx.status = 500;
@@ -217,8 +244,10 @@ router.post('/journal/:userId', async (ctx) => {
 
     const sql = 'INSERT INTO journals (title, content, category, user_id) VALUES (?, ?, ?, ?)';
     const result = await db.query(sql, [title, content, category, userId]);
+
     ctx.status = 201;
-    ctx.body = result;
+    const responseData = await db.query( 'SELECT * FROM journals WHERE id = ?', [result.insertId])
+    ctx.body = responseData[0]
   } catch {
     ctx.status = 400;
     ctx.body = { message: 'Fill the required feilds' };
@@ -229,7 +258,7 @@ router.post('/journal/:userId', async (ctx) => {
 router.get('/journal/:userId', async (ctx) => {
   const userId = ctx.params.userId;
   try {
-    const sql = 'SELECT * FROM journals WHERE user_id = ?';
+    const sql = 'SELECT * FROM journals WHERE user_id = ? ORDER BY id DESC';
     const result = await db.query(sql, [userId]);
     ctx.status = 201;
     ctx.body = result;
@@ -247,12 +276,13 @@ router.delete('/delete/:userId/:journalId', async (ctx) => {
     const sql = 'DELETE FROM journals WHERE user_id = ? AND id = ?';
     const result = await db.query(sql, [userId, journalId]);
 
-
+    if (result.affectedRows > 0) {
       ctx.status = 200;
-      ctx.body = result;
+      ctx.body = { success: "Journal was Deleted!" }
+    }
 
-      ctx.status = 404;
-      ctx.body = { message: 'Journal entry not found' };
+    // ctx.status = 404;
+    // ctx.body = { message: 'Journal entry not found' };
 
   } catch (err) {
     ctx.status = 500;

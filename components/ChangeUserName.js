@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, Alert, Text } from 'react-native';
+import { View, Button, StyleSheet, Alert, Text, Platform } from 'react-native';
 import { Input } from 'react-native-elements';
 
 export default function ChangeUserName({ navigation, userData, setVisible }) {
@@ -9,7 +9,7 @@ export default function ChangeUserName({ navigation, userData, setVisible }) {
 
     //   console.log(userData.map((user) => user.id))
     const handleChangeUsername = async () => {
-        const id = userData.map((user) => user.id)
+        const id = userData.id
         try {
             const response = await fetch(`http://192.168.100.166:3000/profile/${parseInt(id)}`, {
                 method: 'PUT',
@@ -19,13 +19,18 @@ export default function ChangeUserName({ navigation, userData, setVisible }) {
                 },
                 body: JSON.stringify({ name }),
             });
-
             if (response.ok) {
                 setVisible(false)
-                Alert.alert("Success changing username!") || alert("Success changing username!")
+
+                if (Platform.OS === 'web') {
+                    alert("Success changing username!")
+                } else if (Platform.OS === 'ios' || 'android') {
+                    Alert.alert("Success changing username!") 
+                }
             }
 
             const result = await response.json()
+            console.log(result[0]);
 
             if (!result.ok) {
                 setError(result.message);
@@ -36,26 +41,26 @@ export default function ChangeUserName({ navigation, userData, setVisible }) {
     };
 
     return (
-            <View style={styles.container}>
-                <Button
-                    title="Change username"
-                    onPress={() => setIsUsernameAccordionOpen(!isUsernameAccordionOpen)}
-                />
+        <View style={styles.container}>
+            <Button
+                title="Change username"
+                onPress={() => setIsUsernameAccordionOpen(!isUsernameAccordionOpen)}
+            />
 
-                {isUsernameAccordionOpen && (
-                    <View style={styles.accordion}>
-                        <Input
-                            placeholder="Enter new username"
-                            value={name}
-                            onChangeText={setName}
-                            // containerStyle={{ marginBottom: 10 }}
-                        />
-                        <Button title="Submit" onPress={handleChangeUsername} />
-                        
-                        {error && <Text style={{color: 'red'}}>{error}</Text>}
-                    </View>
-                )}
-            </View>
+            {isUsernameAccordionOpen && (
+                <View style={styles.accordion}>
+                    <Input
+                        placeholder="Enter new username"
+                        value={name}
+                        onChangeText={setName}
+                    // containerStyle={{ marginBottom: 10 }}
+                    />
+                    <Button title="Submit" onPress={handleChangeUsername} />
+
+                    {error && <Text style={{ color: 'red' }}>{error}</Text>}
+                </View>
+            )}
+        </View>
 
     );
 }

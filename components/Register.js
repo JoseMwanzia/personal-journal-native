@@ -22,7 +22,7 @@ export default function Register({ navigation }) {
             body: JSON.stringify(data),
         })
         const result = await response.json();
-        result ? (setData(result), navigation.navigate('Login'), Alert.alert('You have successfully signeed up!')) : Alert.alert('Registration Failed!')
+        result ? (setData(result), navigation.navigate('Login'), Alert.alert('You have successfully signeed up!')) : Alert.alert(`${<Text style={{color: 'red'}}>'Registration Failed!'</Text>}`)
     }
 
     return (

@@ -87,7 +87,7 @@ export default function LoginForm({props}) {
                 {/* <Image source={linkedin} style={styles.icons} /> */}
 
                 <View style={styles.mediaIcons}>
-                    <Pressable onPress={() => { Linking.openURL('https://www.instagram.com/shamiri_institute/'); }}>
+                    <Pressable onPress={() => { Linking.openURL('https://www.instagram.com/shamiriinstitute?igsh=MWJ4cHJxZXRpeW5pYQ=='); }}>
                         <FontAwesome6 name="instagram" size={40} color="black" />
                     </Pressable>
                     <Pressable onPress={() => { Linking.openURL('https://www.twitter.com/shamiriteam'); }}>

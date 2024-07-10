@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, Alert, Text } from 'react-native';
+import { View, Button, StyleSheet, Alert, Text, Platform } from 'react-native';
 import { Input } from 'react-native-elements';
 
 export default function ChangePassword({ navigation, userData, setVisible }) {
@@ -17,7 +17,7 @@ export default function ChangePassword({ navigation, userData, setVisible }) {
 
     const handleChangePassword = async () => {
 
-        const id = userData.map((user) => user.id)
+        const id = userData.id
 
         try {
             const response = await fetch(`http://192.168.100.166:3000/password/${parseInt(id)}`, {
@@ -31,7 +31,13 @@ export default function ChangePassword({ navigation, userData, setVisible }) {
 
             if (response.ok) {
                 setVisible(false)
-                Alert.alert("Success changing password!") || alert("Success changing password!")
+
+                if (Platform.OS === 'web') {
+                    alert("Success changing password!")
+                } else  if (Platform.OS === 'ios' || 'android') {
+                    Alert.alert("Success changing password!")
+                }
+
             }
 
             const result = await response.json()

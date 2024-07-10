@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import LoginForm from './components/LoginForm'; 
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,10 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserDashboard from './components/UserDashboard';
 import Logout from './components/Logout';
 import Register from './components/Register';
-import Header from './components/Header';
-import ChangeUserName from './components/ChangeUserName';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import HeaderAndUser from './components/HeaderAndUser';
+import UpdateJournal from './components/UpdateJournal';
+
 
 
 
@@ -49,16 +47,21 @@ export default function App() {
         }}>
 
         <Stack.Screen
-          name="headerAndUser"
-          component={HeaderAndUser}
+          name="userDashboard"
+          component={UserDashboard}
+          options={{headerShown: false, title: ''}}
+        />
+
+        <Stack.Screen
+          name="Update"
+          component={UpdateJournal}
+          options={{ headerShown: true, title: 'Update Journal' }}
         />
 
         <Stack.Screen
           name="Logout"
           component={Logout}
         />
-
-
 
         <Stack.Screen
           name="LoginUser"
