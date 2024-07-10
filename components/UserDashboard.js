@@ -9,15 +9,13 @@ import {
     ActivityIndicator,
     RefreshControl,
 } from "react-native";
-import RNPickerSelect from "react-native-picker-select";
 import SelectDropdown from 'react-native-select-dropdown'
 import CreatedJournals from "./CreatedJournals";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from "./Header";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const UserDashboard = ({ }) => {
-    // const userData = route.params?.userData;
+const UserDashboard = () => {
     const [userData, setUserData] = useState([]);
     const [newEntry, setNewEntry] = useState();
     const [data, setData] = useState({
@@ -26,13 +24,14 @@ const UserDashboard = ({ }) => {
         category: "",
     });
     const [refreshing, setRefreshing] = useState(false);
+
     const [updatedName, setUpdatedName] = useState();
 
     const onRefresh = useCallback(() => {
         setRefreshing(true)
         setTimeout(() => {
             setRefreshing(false)
-        }, 2000);
+        }, 1200);
     }, [])
 
     const categories = [
@@ -42,13 +41,14 @@ const UserDashboard = ({ }) => {
         { title: "Miscellaneous", icon: 'emoticon-wink-outline' },
     ];
 
-    const handleInputChange = (value, name) => {
+    // Controlled input for journal formdata
+    function handleInputChange(value, name) {
         setData({ ...data, [name]: value });
     };
 
+    // Post a new journal to the DB
     async function handleSubmit() {
         const id = userData.id
-
         try {
             const response = await fetch(
                 `http://192.168.100.166:3000/journal/${parseInt(id)}`,
@@ -65,12 +65,11 @@ const UserDashboard = ({ }) => {
             const result = await response.json();
 
             if (result) {
-                setNewEntry(result); // to render new entries when created
+                setNewEntry(result); // redner new entries when created
                 setData({ title: "", content: "", category: "" }); // when successfull reset state
             } else {
                 console.error('Error:', result);
             }
-
         } catch (error) {
             console.error(error);
         }
@@ -122,11 +121,10 @@ const UserDashboard = ({ }) => {
         )
     }
 
-
     return (
         <>
-            <Header userData={userData} />
-            <ScrollView key={userData.id} contentContainerStyle={styles.container} refreshControl={
+            <Header userId={userData.id} onHandleUpdatedName={handleUpdatedName} />
+            <ScrollView contentContainerStyle={styles.container} refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }>
                 <View key={userData.id} style={styles.container}>
@@ -156,25 +154,11 @@ const UserDashboard = ({ }) => {
                 </View>
 
                 <View style={styles.container2}>
-
-                    {/* <RNPickerSelect
-
-                        onValueChange={(text) => handleInputChange(text, "category")}
-                        items={categories}
-                        // value={data.category !== null ? data.category : ""}
-                        placeholder={{ label: "Select a category", value: "", color: 'red' }}
-                        fixAndroidTouchableBug={true}
-                    /> */}
-
-
                     <SelectDropdown
                         data={categories}
-
-                        onSelect={(selectedItem, index) => {
-                            // console.log(selectedItem, index);
+                        onSelect={(selectedItem, category) => {
                             handleInputChange(selectedItem.title, 'category')
                         }}
-
                         renderButton={(selectedItem, isOpened) => {
                             return (
                                 <View style={styles.dropdownButtonStyle}>
@@ -188,8 +172,7 @@ const UserDashboard = ({ }) => {
                                 </View>
                             );
                         }}
-
-                        renderItem={(item, index, isSelected) => {
+                        renderItem={(item, category, isSelected) => {
                             return (
                                 <View style={{ ...styles.dropdownItemStyle, ...(isSelected && { backgroundColor: '#D2D9DF' }) }}>
                                     <Icon name={item.icon} style={styles.dropdownItemIconStyle} />
@@ -200,8 +183,6 @@ const UserDashboard = ({ }) => {
                         showsVerticalScrollIndicator={false}
                         dropdownStyle={styles.dropdownMenuStyle}
                     />
-
-
                     <Pressable onPress={handleSubmit} style={styles.button2}>
                         <Text style={styles.buttonText2} >Create</Text>
                     </Pressable>
@@ -281,7 +262,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     button2: {
-        backgroundColor: '#007bff',
+        backgroundColor: '#0675bd',
         paddingHorizontal: 10,
         paddingVertical: 10,
         borderRadius: 5,
