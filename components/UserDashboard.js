@@ -75,8 +75,7 @@ const UserDashboard = ({ }) => {
         }
     }
 
-
-
+    // get user data and update every 3 seconds
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -88,7 +87,6 @@ const UserDashboard = ({ }) => {
                 const result = await response.json()
 
                 if (response.ok) {
-                    // console.log(result);
                     setUserData(result);
                 }
 
@@ -98,8 +96,9 @@ const UserDashboard = ({ }) => {
         };
 
         fetchData();
-    }, [data.title]);
+    }, [setTimeout(() => { }, 3000)]);
 
+    // optimistic render when ther is no data
     if (!userData) {
         return (
             <View style={[styles.container, styles.horizontal]}>
