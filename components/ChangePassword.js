@@ -77,8 +77,7 @@ export default function ChangePassword({ navigation, userData, setVisible }) {
                         onChangeText={(text) => handleInputChange(text, 'newPassword')}
                         containerStyle={{ marginBottom: 10 }}
                     />
-                    {error && <Text style={{color: 'red'}}>{error}</Text>}
-                    <Button title="Submit" onPress={handleChangePassword} />
+                    {error && <Text style={{ color: 'red' }}>{error}</Text>}
                 </View>
             )}
         </View>
