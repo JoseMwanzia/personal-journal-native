@@ -1,17 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import { Text, View, TextInput, StyleSheet, Button, Alert, Pressable } from 'react-native'
+import { Text, View, TextInput, StyleSheet, Alert, Pressable } from 'react-native'
 
 function UpdateJournal({ route }) {
     const navigation = useNavigation()
     const { entryId, initialTitle, initialContent, initialCategory } = route.params;
 
-    console.log(entryId);
     const [title, setTitle] = useState(initialTitle);
     const [content, setContent] = useState(initialContent);
     const [category, setCategory] = useState(initialCategory);
 
-
+    //update request
     const handleUpdate = async () => {
         try {
             const response = await fetch(`http://192.168.100.166:3000/journal/${entryId}`, {
@@ -46,7 +45,7 @@ function UpdateJournal({ route }) {
             />
             <Text style={styles.label}>Content</Text>
             <TextInput
-                style={styles.input}
+                style={styles.inputContent}
                 value={content}
                 onChangeText={setContent}
                 multiline
@@ -57,8 +56,8 @@ function UpdateJournal({ route }) {
                 value={category}
                 onChangeText={setCategory}
             />
-            <Pressable onPress={handleUpdate}>
-                <Text>Update</Text>
+            <Pressable style={styles.submitButton} onPress={handleUpdate}>
+                <Text style={styles.submitText}>Update</Text>
             </Pressable>
         </View>
     )
@@ -78,6 +77,29 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 20,
         paddingHorizontal: 10,
+    },
+    inputContent: {
+        height: 120,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 20,
+        paddingHorizontal: 10,
+    },
+    submitButton: {
+        backgroundColor: '#0675bd', // Button background color
+        paddingVertical: 12, // Vertical padding
+        paddingHorizontal: 32, // Horizontal padding
+        borderRadius: 8, // Rounded corners
+        alignItems: 'center', // Center text
+        alignSelf: 'center',
+        justifyContent: 'center', // Center text
+        marginVertical: 10, // Vertical margin for spacing
+        width: 130
+    },
+    submitText: {
+        color: '#FFFFFF', // Text color
+        fontSize: 16, // Font size
+        fontWeight: 'bold', // Font weight
     },
 });
 
