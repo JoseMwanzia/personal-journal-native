@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, Alert, Text, Platform } from 'react-native';
+import { View, StyleSheet, Alert, Text, Platform, Pressable } from 'react-native';
 import { Input } from 'react-native-elements';
 
-export default function ChangePassword({ navigation, userData, setVisible }) {
+export default function ChangePassword({ navigation, userId, setVisible }) {
     const [passwordData, setPasswordData] = useState({
         oldPassword: '', newPassword: ''
     });
     const [error, setError] = useState('');
     const [isPasswordAccordionOpen, setIsPasswordAccordionOpen] = useState(false);
 
-    //   console.log(userData.map((user) => user.id))
 
     const handleInputChange = (value, field) => {
         setPasswordData(prevState => ({ ...prevState, [field]: value }));
@@ -17,10 +16,9 @@ export default function ChangePassword({ navigation, userData, setVisible }) {
 
     const handleChangePassword = async () => {
 
-        const id = userData.id
 
         try {
-            const response = await fetch(`http://192.168.100.166:3000/password/${parseInt(id)}`, {
+            const response = await fetch(`http://192.168.100.166:3000/password/${parseInt(userId)}`, {
                 method: 'PUT',
                 headers: {
                     Accept: "application/json",
@@ -34,7 +32,7 @@ export default function ChangePassword({ navigation, userData, setVisible }) {
 
                 if (Platform.OS === 'web') {
                     alert("Success changing password!")
-                } else  if (Platform.OS === 'ios' || 'android') {
+                } else if (Platform.OS === 'ios' || 'android') {
                     Alert.alert("Success changing password!")
                 }
 
@@ -56,10 +54,10 @@ export default function ChangePassword({ navigation, userData, setVisible }) {
 
 
         <View style={styles.container}>
-            <Button
-                title="Change Password"
-                onPress={() => setIsPasswordAccordionOpen(!isPasswordAccordionOpen)}
-            />
+
+            <Pressable style={styles.passwordButton} onPress={() => setIsPasswordAccordionOpen(!isPasswordAccordionOpen)}>
+                <Text style={styles.usernameText}>Change Password</Text>
+            </Pressable>
 
             {isPasswordAccordionOpen && (
                 <View style={styles.accordion}>
@@ -78,6 +76,11 @@ export default function ChangePassword({ navigation, userData, setVisible }) {
                         containerStyle={{ marginBottom: 10 }}
                     />
                     {error && <Text style={{ color: 'red' }}>{error}</Text>}
+
+                    <Pressable style={styles.submitButton} onPress={handleChangePassword}>
+                        <Text style={styles.submitText}>Submit</Text>
+                    </Pressable>
+
                 </View>
             )}
         </View>
@@ -106,5 +109,35 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderRadius: 5,
         width: 250,
+    },
+    passwordButton: {
+        backgroundColor: '#1E90FF', // Button background color
+        paddingVertical: 12, // Vertical padding
+        paddingHorizontal: 32, // Horizontal padding
+        borderRadius: 8, // Rounded corners
+        alignItems: 'center', // Center text
+        justifyContent: 'center', // Center text
+        marginVertical: 10, // Vertical margin for spacing
+    },
+    submitButton: {
+        backgroundColor: '#1E90FF', // Button background color
+        paddingVertical: 12, // Vertical padding
+        paddingHorizontal: 32, // Horizontal padding
+        borderRadius: 8, // Rounded corners
+        alignItems: 'center', // Center text
+        alignSelf: 'center',
+        justifyContent: 'center', // Center text
+        marginVertical: 10, // Vertical margin for spacing
+        width: 130,
+    },
+    usernameText: {
+        color: '#FFFFFF', // Text color
+        fontSize: 16, // Font size
+        fontWeight: 'bold', // Font weight
+    },
+    submitText: {
+        color: '#FFFFFF', // Text color
+        fontSize: 16, // Font size
+        fontWeight: 'bold', // Font weight
     },
 });
