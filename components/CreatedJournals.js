@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ListItem, Avatar } from "react-native-elements";
-import {  Text, View, ActivityIndicator, StyleSheet, Pressable, Modal, ScrollView } from "react-native"; // Import Text from react-native
+import { Text, View, ActivityIndicator, StyleSheet, Pressable } from "react-native";
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { formatDistanceToNow, parseISO } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { useNavigation } from "@react-navigation/native";
+import JournalModals from './JournalModals';
 
 export default function CreatedJournals({ userData, newEntry }) {
     const navigation = useNavigation()
@@ -12,24 +13,24 @@ export default function CreatedJournals({ userData, newEntry }) {
     const [loading, setLoading] = useState(true)
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState({});
 
-    const handleLongPress = (item) => {
+    const handlePress = (item) => {
         setSelectedItem(item);
         setModalVisible(true);
     };
 
     const handleCloseModal = () => {
         setModalVisible(false);
-        setSelectedItem(null);
+        setSelectedItem({});
     };
 
+    // get the all users' journals and update after certain time
     useEffect(() => {
         async function fetchUserJournals() {
-            const id = userData.id
-
+            const userId = userData.id
             try {
-                const response = await fetch(`http://192.168.100.166:3000/journal/${parseInt(id)}`)
+                const response = await fetch(`http://192.168.100.166:3000/journal/${parseInt(userId)}`)
                 const result = await response.json()
 
                 if (result) {
@@ -42,14 +43,16 @@ export default function CreatedJournals({ userData, newEntry }) {
             }
         }
         fetchUserJournals()
-    }, [userData])
+    }, [setTimeout(() => { }, 2000)])
 
+    // prepend a new created journal entry on the DOM
     useEffect(() => {
         if (newEntry) {
             setData(prevData => [newEntry, ...prevData])
         }
     }, [newEntry])
 
+    // delete journals from DB and the DOM
     async function handleDeleteEntry(journalId) {
         const id = userData.id
         try {
@@ -60,13 +63,13 @@ export default function CreatedJournals({ userData, newEntry }) {
 
             if (result.success) {
                 setData((prevData) => prevData.filter(entry => entry.id !== journalId));
-                console.log(result.success);
             }
         } catch (error) {
             console.error(error);
         }
     }
 
+    // optimistic render when ther is no data
     if (loading) {
         return (
             <View style={[styles.container, styles.horizontal]}>
@@ -74,81 +77,61 @@ export default function CreatedJournals({ userData, newEntry }) {
             </View>
         );
     }
-    // console.log(data.map((entry) => entry.id));
 
-    const entry = data.map((entry) => (
-
-        <View key={entry.id}>
-
-            <ListItem
-                Component={Pressable}
-                containerStyle={{ marginBottom: 5, width: 350, height: 150 }}
-                disabledStyle={{ opacity: 0.5 }}
-                onLongPress={() => handleLongPress(entry)}
-                onPress={() => navigation.navigate('Update', {
-                    entryId: entry.id,
-                    initialTitle: entry.title,
-                    initialContent: entry.content,
-                    initialCategory: entry.category
-
-                })} // Fixed onPress event handler
-                pad={20}
-                key={entry.id}
-
-            >
-
-
-                <Modal
-                    animationType="slide"
-                    // transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={handleCloseModal}
+    // iterate journals from DB
+    const entry = data.map((entry) => {
+        return (
+            <View key={entry.id}>
+                <ListItem
+                    Component={Pressable}
+                    containerStyle={{ marginBottom: 5, width: 350, height: 200, overflow: "hidden"  }}
+                    disabledStyle={{ opacity: 0.5 }}
+                    onPress={() => handlePress(entry)}
+                    onLongPress={() => {}} // Fixed onPress event handler
+                    pad={20}
+                    key={entry.id}
+                    style={selectedItem ? { borderWidth: 1, borderColor: 'darkgrey' } : { borderWidth: 1, borderColor: 'blue' }}
                 >
-                    <View style={styles.modalOverlay}>
-                        <View style={styles.modalContainer}>
-                            <Text style={styles.modalTitle}>Item Details</Text>
-                            <Text style={styles.modalContent}>{entry.title}</Text>
-                            <Pressable
-                                style={styles.closeButton}
-                                onPress={handleCloseModal}
-                            >
-                                <Text style={styles.closeButtonText}>Close</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </Modal>
+                    <JournalModals entry={entry} data={data} modalVisible={modalVisible} selectedItem={selectedItem} handleCloseModal={handleCloseModal} />
+
+                    {/* send data to UpdateJournal.js comp on press */}
+                    <Pressable onPress={() => navigation.navigate('Update', {
+                        entryId: entry.id,
+                        initialTitle: entry.title,
+                        initialContent: entry.content,
+                        initialCategory: entry.category
+
+                    })}>
+                        <FontAwesome name="edit" size={24} color="black" />
+                    </Pressable>
+
+                    <ListItem.Content>
+                        <Text style={{ color: 'gray', fontSize: 12 }}>Created {formatDistanceToNow(entry.created_at, { addSuffix: true })}</Text>
+                        <Text style={{ color: 'gray', fontSize: 12 }}>Updated {formatDistanceToNow(entry.updated_at, { addSuffix: true })}</Text>
+                        <ListItem.Title>
+                            <Text style={{ fontWeight: 'italicized', paddingBottom: 5, fontSize: 15, color: 'darkgray' }}>{`{${entry.category}}`}</Text> {/* Wrapped text in Text component */}
+                        </ListItem.Title>
+                        <View style={styles.separator} />
+                        <ListItem.Title>
+                            <Text style={{ fontWeight: "bold", paddingBottom: 10 }}>{entry.title}</Text> {/* Wrapped text in Text component */}
+                        </ListItem.Title>
+                        <ListItem.Subtitle style={{ paddingBottom: 10 }}>
+
+                            <Text style={{ overflow: 'hidden', height: 40 }}>{entry.content.slice(0, 50) + "..."}</Text> {/* Wrapped text in Text component */}
+                        </ListItem.Subtitle>
+                        <Text style={{ color: 'grey', fontSize: 10 }}>Long Press to edit</Text>
+                    </ListItem.Content>
+
+                    <Pressable onPress={() => handleDeleteEntry(entry.id)}>
+                        <FontAwesome6 name="delete-left" size={24} color="black" />
+                    </Pressable>
+
+                </ListItem>
+            </View >
 
 
-
-
-                <Pressable>
-                    <FontAwesome name="edit" size={24} color="black" />
-                </Pressable>
-
-                <ListItem.Content>
-                    <Text style={{color: 'gray'}}>Created {formatDistanceToNow(entry.created_at, { addSuffix: true })}</Text>
-                    <Text style={{color: 'gray'}}>Updated {formatDistanceToNow(entry.updated_at, { addSuffix: true })}</Text>
-                    <ListItem.Title>
-                        <Text>{entry.category}</Text> {/* Wrapped text in Text component */}
-                    </ListItem.Title>
-                    <View style={styles.separator} />
-                    <ListItem.Title>
-                        <Text>{entry.title}</Text> {/* Wrapped text in Text component */}
-                    </ListItem.Title>
-                    <ListItem.Subtitle>
-                        <Text>{entry.content}</Text> {/* Wrapped text in Text component */}
-                    </ListItem.Subtitle>
-                </ListItem.Content>
-
-                <Pressable onPress={() => handleDeleteEntry(entry.id)}>
-                    <FontAwesome6 name="delete-left" size={24} color="black" />
-                </Pressable>
-
-            </ListItem>
-        </View >
-
-
-    ))
+        )
+    })
 
     return (
         <>
@@ -179,42 +162,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-      },
-      item: {
+    },
+    item: {
         padding: 20,
         margin: 10,
         backgroundColor: '#f0f0f0',
         borderRadius: 10,
-      },
-      modalOverlay: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-      modalContainer: {
-        width: '80%', // Adjust the width as needed
-        maxWidth: 400, // Optional: set a maximum width
-        padding: 20,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        alignItems: 'center',
-      },
-      modalTitle: {
-        fontSize: 20,
-        marginBottom: 10,
-      },
-      modalContent: {
-        fontSize: 16,
-        marginBottom: 20,
-      },
-    closeButton: {
-        padding: 10,
-        backgroundColor: '#2196F3',
-        borderRadius: 10,
-      },
-      closeButtonText: {
-        color: 'white',
-        fontSize: 16,
-      },
+    },
+
 });
