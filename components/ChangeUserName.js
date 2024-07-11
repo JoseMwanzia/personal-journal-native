@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, Alert, Text, Platform } from 'react-native';
+import { View, StyleSheet, Alert, Text, Platform, Pressable } from 'react-native';
 import { Input } from 'react-native-elements';
 
-export default function ChangeUserName({ navigation, userData, setVisible }) {
+export default function ChangeUserName({ userId, setVisible, onHandleUpdatedName }) {
     const [name, setName] = useState('');
     const [error, setError] = useState('');
+
     const [isUsernameAccordionOpen, setIsUsernameAccordionOpen] = useState(false);
 
-    //   console.log(userData.map((user) => user.id))
     const handleChangeUsername = async () => {
-        const id = userData.id
         try {
-            const response = await fetch(`http://192.168.100.166:3000/profile/${parseInt(id)}`, {
+            const response = await fetch(`http://192.168.100.166:3000/profile/${parseInt(userId)}`, {
                 method: 'PUT',
                 headers: {
                     Accept: "application/json",
@@ -19,9 +18,9 @@ export default function ChangeUserName({ navigation, userData, setVisible }) {
                 },
                 body: JSON.stringify({ name }),
             });
+
             if (response.ok) {
                 setVisible(false)
-
                 if (Platform.OS === 'web') {
                     alert("Success changing username!")
                 } else if (Platform.OS === 'ios' || 'android') {
@@ -30,7 +29,9 @@ export default function ChangeUserName({ navigation, userData, setVisible }) {
             }
 
             const result = await response.json()
-            console.log(result[0]);
+            if (result) {
+                onHandleUpdatedName(result[0])
+            }
 
             if (!result.ok) {
                 setError(result.message);
@@ -42,10 +43,9 @@ export default function ChangeUserName({ navigation, userData, setVisible }) {
 
     return (
         <View style={styles.container}>
-            <Button
-                title="Change username"
-                onPress={() => setIsUsernameAccordionOpen(!isUsernameAccordionOpen)}
-            />
+            <Pressable style={styles.usernameButton} onPress={() => setIsUsernameAccordionOpen(!isUsernameAccordionOpen)}>
+                <Text style={styles.usernameText}>Change Username</Text>
+            </Pressable>
 
             {isUsernameAccordionOpen && (
                 <View style={styles.accordion}>
@@ -55,9 +55,11 @@ export default function ChangeUserName({ navigation, userData, setVisible }) {
                         onChangeText={setName}
                     // containerStyle={{ marginBottom: 10 }}
                     />
-                    <Button title="Submit" onPress={handleChangeUsername} />
-
                     {error && <Text style={{ color: 'red' }}>{error}</Text>}
+                    <Pressable style={styles.submitButton} onPress={handleChangeUsername}>
+                        <Text style={styles.submitText}>Submit</Text>
+                    </Pressable>
+
                 </View>
             )}
         </View>
@@ -86,5 +88,35 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderRadius: 5,
         width: 250,
+    },
+    usernameButton: {
+        backgroundColor: '#1E90FF', // Button background color
+        paddingVertical: 12, // Vertical padding
+        paddingHorizontal: 32, // Horizontal padding
+        borderRadius: 8, // Rounded corners
+        alignItems: 'center', // Center text
+        justifyContent: 'center', // Center text
+        marginVertical: 10, // Vertical margin for spacing
+    },
+    submitButton: {
+        backgroundColor: '#1E90FF', // Button background color
+        paddingVertical: 12, // Vertical padding
+        paddingHorizontal: 32, // Horizontal padding
+        borderRadius: 8, // Rounded corners
+        alignItems: 'center', // Center text
+        alignSelf: 'center',
+        justifyContent: 'center', // Center text
+        marginVertical: 10, // Vertical margin for spacing
+        width: 130
+    },
+    usernameText: {
+        color: '#FFFFFF', // Text color
+        fontSize: 16, // Font size
+        fontWeight: 'bold', // Font weight
+    },
+    submitText: {
+        color: '#FFFFFF', // Text color
+        fontSize: 16, // Font size
+        fontWeight: 'bold', // Font weight
     },
 });
