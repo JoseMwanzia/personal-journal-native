@@ -72,7 +72,7 @@ router.post('/register', async (ctx) => {
     ctx.status = 400;
     ctx.body = { message: 'Please create email and password' };
     return;
-  } else if ( !password) {
+  } else if (!password) {
     ctx.status = 400;
     ctx.body = { message: 'Please create password' };
     return;
@@ -83,7 +83,7 @@ router.post('/register', async (ctx) => {
     const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
     await db.query(sql, [name, email, hashedPassword]);
     ctx.status = 201;
-    ctx.body = {ok: true};
+    ctx.body = { ok: true };
   } catch (err) {
     ctx.status = 500;
     ctx.body = err.message;
@@ -94,7 +94,7 @@ router.post('/register', async (ctx) => {
 router.post('/login', async (ctx) => {
   const { email, password } = ctx.request.body;
 
-  if (!email || !password ) {
+  if (!email || !password) {
     ctx.status = 400;
     ctx.body = { message: 'Please put your email and password' };
     return;
@@ -118,7 +118,7 @@ router.post('/login', async (ctx) => {
       }
     } else {
       ctx.status = 401;
-      ctx.body = {message: 'Invalid email!'}
+      ctx.body = { message: 'Invalid email!' }
     }
   } catch (err) {
     ctx.status = 500;
@@ -127,9 +127,9 @@ router.post('/login', async (ctx) => {
 });
 
 // Logout route
-router.post('/logout', async (ctx) => {
+router.delete('/logout', async (ctx) => {
   ctx.session = null;
-  ctx.body = 'Logged out successfully';
+  ctx.body = { message: 'Logged out successfully' }
 });
 
 
@@ -232,8 +232,6 @@ router.put('/password/:userId', authMiddleware, async (ctx) => {
     const getUser = await db.query(sql, [userId]);
     const userPassword = getUser[0].password
 
-    // console.log(userPassword);
-    // console.log(sql);
 
     if (userPassword.length === 0) {
       ctx.status = 404;
@@ -281,8 +279,7 @@ router.post('/journal/:userId', authMiddleware, async (ctx) => {
 
   if (!title || !content || !category) {
     ctx.status = 400;
-    ctx.body = { message: 'Please fill all the fields' };
-    return;
+    return ctx.body = { message: 'Please fill all the fields' };
   }
 
   try {
@@ -291,7 +288,7 @@ router.post('/journal/:userId', authMiddleware, async (ctx) => {
     const result = await db.query(sql, [title, content, category, userId]);
 
     ctx.status = 201;
-    const responseData = await db.query( 'SELECT * FROM journals WHERE id = ?', [result.insertId])
+    const responseData = await db.query('SELECT * FROM journals WHERE id = ?', [result.insertId])
     ctx.body = responseData[0]
   } catch {
     ctx.status = 400;
