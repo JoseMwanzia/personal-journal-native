@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert, Text, Platform, Pressable } from 'react-native';
 import { Input } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ChangeUserName({ userId, setVisible, onHandleUpdatedName }) {
     const [name, setName] = useState('');
@@ -9,12 +10,16 @@ export default function ChangeUserName({ userId, setVisible, onHandleUpdatedName
     const [isUsernameAccordionOpen, setIsUsernameAccordionOpen] = useState(false);
 
     const handleChangeUsername = async () => {
+
+        const token = await AsyncStorage.getItem('userToken'); //get token 
+
         try {
             const response = await fetch(`http://192.168.100.166:3000/profile/${parseInt(userId)}`, {
                 method: 'PUT',
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}` // send token to protect the route
                 },
                 body: JSON.stringify({ name }),
             });
