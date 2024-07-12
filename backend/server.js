@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt');
 const db = require('./db');
 const cors = require('@koa/cors');
 const { pool } = require('./db');
+const jwt = require('jsonwebtoken')
+const SECRET_KEY = 'MY_secret_key';
+
 
 const app = new Koa();
 const router = new Router();
@@ -22,7 +25,7 @@ app.keys = ['your-session-secret'];
 
 const sessionConfig = {
   key: 'koa-session-id', // Name of the cookie to save session ID
-  maxAge: null, // Session expires in 1 day (ms)
+  maxAge: null, // Never expires
   overwrite: false, // Overwrite existing session data
   httpOnly: false, // Cookie accessible only via HTTP(S)
   signed: true, // Cookie is signed
@@ -36,12 +39,25 @@ app.use(session(sessionConfig, app));
 
 // Middleware to protect routes
 const authMiddleware = async (ctx, next) => {
-  if (!ctx.session.userId) {
+  const authHeader = ctx.headers['authorization']
+
+  if (!authHeader) {
     ctx.status = 401;
-    ctx.body = 'You are not authorized to access this resource';
-  } else {
-    await next();
+    ctx.body = 'NO TOKEN. You are not authorized to access this resource';
+    return;
   }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY)
+    ctx.state.user = decoded
+    await next();
+  } catch (error) {
+    ctx.status = 401;
+    ctx.body = 'Invalid token', error;
+  }
+
 };
 
 // Registration route
@@ -93,7 +109,7 @@ router.post('/login', async (ctx) => {
       if (match) {
         ctx.session.userId = user.id; // Set session ID upon successful login
         // console.log();
-        ctx.body = JSON.stringify(result) // {userToken: user.id};
+        const tokenData = jwt.sign({ responseData }, SECRET_KEY) // set token for FE
       } else {
         ctx.status = 401;
         ctx.body = {message: 'Invalid password!'}
