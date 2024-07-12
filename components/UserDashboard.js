@@ -100,8 +100,12 @@ const UserDashboard = () => {
 
                 const storedUserData = await AsyncStorage.getItem('data');
                 const userId = JSON.parse(storedUserData).map((user) => user.id)
+                const token = await AsyncStorage.getItem('userToken'); //get locally stored token 
 
                 const response = await fetch(`http://192.168.100.166:3000/user/${parseInt(userId)}`, {
+                    method: 'GET',
+                    headers: { Authorization: `Bearer ${token}` }
+                })
                 const result = await response.json()
 
                 if (response.ok) {
