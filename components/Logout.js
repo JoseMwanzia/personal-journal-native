@@ -8,8 +8,6 @@ export default function Logout({ setVisible }) {
 
 
     async function handelLogout() {
-        AsyncStorage.setItem('isLoggedIn', '')
-        AsyncStorage.setItem('token', '')
         setVisible(false)
         try {
             const response = await fetch('http://192.168.100.166:3000/logout', {
