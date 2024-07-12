@@ -45,9 +45,9 @@ const UserDashboard = () => {
     async function handleSubmit() {
         const id = userData.id
         const token = await AsyncStorage.getItem('userToken'); //get token 
+
         try {
-            const response = await fetch(
-                `http://192.168.100.166:3000/journal/${parseInt(id)}`,
+            const response = await fetch(`http://192.168.100.166:3000/journal/${parseInt(id)}`,
                 {
                     method: "POST",
                     headers: {
@@ -98,10 +98,10 @@ const UserDashboard = () => {
         const fetchData = async () => {
             try {
 
-                const storedUserData = await AsyncStorage.getItem('token');
-                const parsedId = JSON.parse(storedUserData).map((user) => user.id)
+                const storedUserData = await AsyncStorage.getItem('data');
+                const userId = JSON.parse(storedUserData).map((user) => user.id)
 
-                const response = await fetch(`http://192.168.100.166:3000/user/${parseInt(parsedId)}`)
+                const response = await fetch(`http://192.168.100.166:3000/user/${parseInt(userId)}`, {
                 const result = await response.json()
 
                 if (response.ok) {
@@ -114,7 +114,7 @@ const UserDashboard = () => {
         };
 
         fetchData();
-    }, [setTimeout(() => { }, 3000)]);
+    }, []);
 
     // optimistic render when ther is no data
     if (!userData) {
