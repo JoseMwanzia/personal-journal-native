@@ -109,10 +109,12 @@ router.post('/login', async (ctx) => {
       if (match) {
         ctx.session.userId = user.id; // Set session ID upon successful login
         // console.log();
+        const responseData = result.map(({ id, name, email }) => ({ id, name, email }))
         const tokenData = jwt.sign({ responseData }, SECRET_KEY) // set token for FE
+        ctx.body = { responseData, tokenData }
       } else {
         ctx.status = 401;
-        ctx.body = {message: 'Invalid password!'}
+        ctx.body = { message: 'Invalid password!' }
       }
     } else {
       ctx.status = 401;
