@@ -16,6 +16,15 @@ export default function Logout({ setVisible }) {
                 method: "DELETE",
                 headers: { Authorization: `Bearer: ${await AsyncStorage.getItem('userToken')}` }
             })
+            const result = await response.json();
+
+            if (response.ok) {
+                await AsyncStorage.removeItem('isLoggedIn')
+                await AsyncStorage.removeItem('data')
+                await AsyncStorage.removeItem('userToken')
+                navigation.navigate('LoginUser')
+                console.log(result);
+            } else {
     }
 
     return (
