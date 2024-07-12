@@ -67,9 +67,12 @@ export default function CreatedJournals({ userData, newEntry }) {
     // delete journals from DB and the DOM
     async function handleDeleteEntry(journalId) {
         const id = userData.id
+        const token = await AsyncStorage.getItem('userToken'); //get token 
+
         try {
             const response = await fetch(`http://192.168.100.166:3000/delete/${parseInt(id)}/${parseInt(journalId)}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` }
             })
             const result = await response.json()
 
