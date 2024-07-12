@@ -6,6 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigation } from "@react-navigation/native";
 import JournalModals from './JournalModals';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CreatedJournals({ userData, newEntry }) {
     const navigation = useNavigation()
@@ -29,8 +30,12 @@ export default function CreatedJournals({ userData, newEntry }) {
     useEffect(() => {
         async function fetchUserJournals() {
             const userId = userData.id
+            const token = await AsyncStorage.getItem('userToken'); //get token 
             try {
-                const response = await fetch(`http://192.168.100.166:3000/journal/${parseInt(userId)}`)
+                const response = await fetch(`http://192.168.100.166:3000/journal/${parseInt(userId)}`, {
+                    method: 'GET',
+                    headers: { Authorization: `Bearer ${token}` }
+                })
                 const result = await response.json()
 
                 if (result) {
