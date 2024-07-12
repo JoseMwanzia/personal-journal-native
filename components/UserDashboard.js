@@ -49,6 +49,7 @@ const UserDashboard = () => {
     // Post a new journal to the DB
     async function handleSubmit() {
         const id = userData.id
+        const token = await AsyncStorage.getItem('userToken'); //get token 
         try {
             const response = await fetch(
                 `http://192.168.100.166:3000/journal/${parseInt(id)}`,
@@ -57,6 +58,7 @@ const UserDashboard = () => {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}` // send token to protect the route
                     },
                     body: JSON.stringify(data),
                 }
