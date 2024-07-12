@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function UpdateJournal({ route }) {
     const navigation = useNavigation()
-    const { entryId, initialTitle, initialContent, initialCategory } = route.params;
+    const { entryId, initialTitle, initialContent, initialCategory, onUpdate } = route.params;
 
     const [title, setTitle] = useState(initialTitle);
     const [content, setContent] = useState(initialContent);
@@ -26,6 +26,7 @@ function UpdateJournal({ route }) {
 
             if (response.ok) {
                 Alert.alert('Success', 'Journal entry updated successfully.');
+                onUpdate(true) // send a boolean back to parent(CreatedJournnals)
                 navigation.goBack(); // Go back to the previous screen
             } else {
                 Alert.alert('Error', 'Failed to update journal entry.');
