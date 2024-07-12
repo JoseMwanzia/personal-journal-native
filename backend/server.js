@@ -134,7 +134,7 @@ router.post('/logout', async (ctx) => {
 
 
 // Get all users route
-router.get('/users', async (ctx) => {
+router.get('/users', authMiddleware, async (ctx) => {
   try {
     const sql = 'SELECT * FROM users';
     const users = await db.query(sql);
@@ -146,7 +146,7 @@ router.get('/users', async (ctx) => {
 });
 
 // Get all user/:id route
-router.get('/user/:userId', async (ctx) => {
+router.get('/user/:userId', authMiddleware, async (ctx) => {
   const userId = ctx.params.userId;
   try {
     const sql = 'SELECT * FROM users WHERE id = ?';
@@ -160,7 +160,7 @@ router.get('/user/:userId', async (ctx) => {
 });
 
 // Update username
-router.put('/profile/:userId', async (ctx) => {
+router.put('/profile/:userId', authMiddleware, async (ctx) => {
   const { name } = ctx.request.body;
   const userId = ctx.params.userId;
 
@@ -188,7 +188,7 @@ router.put('/profile/:userId', async (ctx) => {
 });
 
 // Update journal
-router.put('/journal/:journalId', async (ctx) => {
+router.put('/journal/:journalId', authMiddleware, async (ctx) => {
   const { title, content, category } = ctx.request.body;
   const journalId = ctx.params.journalId;
 
@@ -216,7 +216,7 @@ router.put('/journal/:journalId', async (ctx) => {
 
 
 // Update password
-router.put('/password/:userId', async (ctx) => {
+router.put('/password/:userId', authMiddleware, async (ctx) => {
   const { oldPassword, newPassword } = ctx.request.body;
   const userId = ctx.params.userId;
 
@@ -275,7 +275,7 @@ router.put('/password/:userId', async (ctx) => {
 
 
 // Create journal entry route
-router.post('/journal/:userId', async (ctx) => {
+router.post('/journal/:userId', authMiddleware, async (ctx) => {
   const { title, content, category } = ctx.request.body;
   const userId = ctx.params.userId;
 
@@ -300,7 +300,7 @@ router.post('/journal/:userId', async (ctx) => {
 });
 
 // Get specific user journals route
-router.get('/journal/:userId', async (ctx) => {
+router.get('/journal/:userId', authMiddleware, async (ctx) => {
   const userId = ctx.params.userId;
   try {
     const sql = 'SELECT * FROM journals WHERE user_id = ? ORDER BY id DESC';
@@ -314,7 +314,7 @@ router.get('/journal/:userId', async (ctx) => {
 });
 
 // delete specific user's journal route
-router.delete('/delete/:userId/:journalId', async (ctx) => {
+router.delete('/delete/:userId/:journalId', authMiddleware , async (ctx) => {
   const { userId, journalId } = ctx.params;
 
   try {
