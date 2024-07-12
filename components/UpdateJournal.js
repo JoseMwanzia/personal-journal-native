@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
+import { Text, View, TextInput, StyleSheet, Alert, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function UpdateJournal({ route }) {
@@ -9,6 +10,7 @@ function UpdateJournal({ route }) {
     const [title, setTitle] = useState(initialTitle);
     const [content, setContent] = useState(initialContent);
     const [category, setCategory] = useState(initialCategory);
+
 
     //update request
     const handleUpdate = async () => {
