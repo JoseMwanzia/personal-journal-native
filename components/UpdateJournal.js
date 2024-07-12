@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react'
-import { Text, View, TextInput, StyleSheet, Alert, Pressable } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function UpdateJournal({ route }) {
     const navigation = useNavigation()
@@ -12,11 +12,14 @@ function UpdateJournal({ route }) {
 
     //update request
     const handleUpdate = async () => {
+        const token = await AsyncStorage.getItem('userToken');
+
         try {
             const response = await fetch(`http://192.168.100.166:3000/journal/${entryId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({ title, content, category }),
             });
