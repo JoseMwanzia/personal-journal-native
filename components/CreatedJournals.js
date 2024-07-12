@@ -37,6 +37,7 @@ export default function CreatedJournals({ userData, newEntry }) {
         async function fetchUserJournals() {
             const userId = userData.id
             const token = await AsyncStorage.getItem('userToken'); //get token 
+
             try {
                 const response = await fetch(`http://192.168.100.166:3000/journal/${parseInt(userId)}`, {
                     method: 'GET',
@@ -44,7 +45,7 @@ export default function CreatedJournals({ userData, newEntry }) {
                 })
                 const result = await response.json()
 
-                if (result) {
+                if (response.ok) {
                     setLoading(false);
                     setData(result)
                 }
@@ -99,10 +100,10 @@ export default function CreatedJournals({ userData, newEntry }) {
             <View key={entry.id}>
                 <ListItem
                     Component={Pressable}
-                    containerStyle={{ marginBottom: 5, width: 350, height: 200, overflow: "hidden"  }}
+                    containerStyle={{ marginBottom: 5, width: 350, height: 200, overflow: "hidden" }}
                     disabledStyle={{ opacity: 0.5 }}
                     onPress={() => handlePress(entry)}
-                    onLongPress={() => {}} // Fixed onPress event handler
+                    onLongPress={() => { }} // Fixed onPress event handler
                     pad={20}
                     key={entry.id}
                     style={selectedItem ? { borderWidth: 1, borderColor: 'darkgrey' } : { borderWidth: 1, borderColor: 'blue' }}
@@ -114,14 +115,13 @@ export default function CreatedJournals({ userData, newEntry }) {
                         entryId: entry.id,
                         initialTitle: entry.title,
                         initialContent: entry.content,
-                        initialCategory: entry.category
+                        initialCategory: entry.category,
                         onUpdate: (updatesFromUpdatedJournals) => handleUpdates(updatesFromUpdatedJournals)
                     })}>
                         <FontAwesome name="edit" size={24} color="black" />
                     </Pressable>
 
                     <ListItem.Content>
-                        <Text style={{ color: 'gray', fontSize: 12 }}>Created {formatDistanceToNow(entry.created_at, { addSuffix: true })}</Text>
                         <Text style={{ color: 'gray', fontSize: 12 }}>Updated {formatDistanceToNow(entry.updated_at, { addSuffix: true })}</Text>
                         <ListItem.Title>
                             <Text style={{ fontWeight: 'italicized', paddingBottom: 5, fontSize: 15, color: 'darkgray' }}>{`{${entry.category}}`}</Text> {/* Wrapped text in Text component */}
@@ -134,7 +134,7 @@ export default function CreatedJournals({ userData, newEntry }) {
 
                             <Text style={{ overflow: 'hidden', height: 40 }}>{entry.content.slice(0, 50) + "..."}</Text> {/* Wrapped text in Text component */}
                         </ListItem.Subtitle>
-                        <Text style={{ color: 'grey', fontSize: 10 }}>Long Press to edit</Text>
+                        <Text style={{ color: 'gray', fontSize: 12 }}>Created {formatDistanceToNow(entry.created_at, { addSuffix: true })}</Text>
                     </ListItem.Content>
 
                     <Pressable onPress={() => handleDeleteEntry(entry.id)}>
