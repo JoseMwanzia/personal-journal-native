@@ -15,6 +15,7 @@ export default function CreatedJournals({ userData, newEntry }) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState({});
+    const [updates, setUpdates] = useState(false);
 
     const handlePress = (item) => {
         setSelectedItem(item);
@@ -25,6 +26,11 @@ export default function CreatedJournals({ userData, newEntry }) {
         setModalVisible(false);
         setSelectedItem({});
     };
+
+    // Updates from UpdateJournal to render to the useEffect hook
+    function handleUpdates(updatedEntry) {
+        updatedEntry ? setUpdates(true) : setUpdates(false)
+    }
 
     // get the all users' journals and update after certain time
     useEffect(() => {
@@ -48,7 +54,8 @@ export default function CreatedJournals({ userData, newEntry }) {
             }
         }
         fetchUserJournals()
-    }, [setTimeout(() => { }, 2000)])
+        setUpdates(false) // set back to false after a true updates has been rendered on the DOM
+    }, [userData, updates])
 
     // prepend a new created journal entry on the DOM
     useEffect(() => {
@@ -105,7 +112,7 @@ export default function CreatedJournals({ userData, newEntry }) {
                         initialTitle: entry.title,
                         initialContent: entry.content,
                         initialCategory: entry.category
-
+                        onUpdate: (updatesFromUpdatedJournals) => handleUpdates(updatesFromUpdatedJournals)
                     })}>
                         <FontAwesome name="edit" size={24} color="black" />
                     </Pressable>
