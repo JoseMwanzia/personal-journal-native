@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react'
+import React from 'react'
 import { Text, StyleSheet, Pressable } from 'react-native'
 
 export default function Logout({ setVisible }) {
@@ -25,6 +25,12 @@ export default function Logout({ setVisible }) {
                 navigation.navigate('LoginUser')
                 console.log(result);
             } else {
+                console.error('Failed to log out');
+            }
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+
     }
 
     return (
