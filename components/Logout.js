@@ -11,13 +11,11 @@ export default function Logout({ setVisible }) {
         AsyncStorage.setItem('isLoggedIn', '')
         AsyncStorage.setItem('token', '')
         setVisible(false)
-        navigation.navigate('LoginUser')
-
-        const response = await fetch('http://192.168.100.166:3000/logout', {
-            method: "DELETE"
-        })
-        const result = await response.json();
-        console.log(result);
+        try {
+            const response = await fetch('http://192.168.100.166:3000/logout', {
+                method: "DELETE",
+                headers: { Authorization: `Bearer: ${await AsyncStorage.getItem('userToken')}` }
+            })
     }
 
     return (
