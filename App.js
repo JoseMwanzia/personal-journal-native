@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
-import LoginForm from './components/LoginForm'; 
+import { StyleSheet, LogBox } from 'react-native';
+import LoginForm from './components/LoginForm';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
@@ -11,11 +11,29 @@ import Register from './components/Register';
 import UpdateJournal from './components/UpdateJournal';
 
 
+// Used LogBox to suppress unwanted warnings and handle errors gracefully 
+
+// Ignore specific warnings
+LogBox.ignoreLogs(['Warning: ...']);
+
+// Ignore all warnings
+LogBox.ignoreAllLogs();
+
+const globalErrorHandler = (error, isFatal) => {
+  if (isFatal) {
+    console.error('Fatal error:', error);
+  } else {
+    console.error('Non-fatal error:', error);
+  }
+};
+
+ErrorUtils.setGlobalHandler(globalErrorHandler);
+// END OF LogBox to suppress unwanted warnings and handle errors gracefully 
 
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+
 
   async function getData() {
     const data = await AsyncStorage.getItem('isLoggedIn');
@@ -103,7 +121,7 @@ export default function App() {
   return (
     <NavigationContainer>
 
-        {isLoggedIn ? <DrawerNav /> : <LoginNav />}
+      {isLoggedIn ? <DrawerNav /> : <LoginNav />}
 
       <StatusBar style="dark" />
     </NavigationContainer>
