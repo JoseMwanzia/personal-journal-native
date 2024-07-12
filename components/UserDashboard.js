@@ -26,13 +26,8 @@ const UserDashboard = () => {
     const [refreshing, setRefreshing] = useState(false);
 
     const [updatedName, setUpdatedName] = useState();
-
-    const onRefresh = useCallback(() => {
-        setRefreshing(true)
-        setTimeout(() => {
-            setRefreshing(false)
-        }, 1200);
-    }, [])
+    const [errors, setErrors] = useState();
+    const [showErrors, setShowErrors] = useState(false);
 
     const categories = [
         { title: "Personal", icon: 'emoticon-happy-outline' },
@@ -66,11 +61,18 @@ const UserDashboard = () => {
 
             const result = await response.json();
 
-            if (result) {
+            if (response.ok) {
                 setNewEntry(result); // redner new entries when created
                 setData({ title: "", content: "", category: "" }); // when successfull reset state
             } else {
-                console.error('Error:', result);
+                console.error('Error:', result.message);
+                setErrors(result.message)
+                setShowErrors(true)
+
+                const timer = setTimeout(() => {
+                    setShowErrors(false);
+                }, 3000); // set timer to unmount the error text
+                return () => clearTimeout(timer); // Clear the timer  
             }
         } catch (error) {
             console.error(error);
@@ -189,6 +191,7 @@ const UserDashboard = () => {
                         <Text style={styles.buttonText2} >Create</Text>
                     </Pressable>
                 </View>
+                {showErrors && <Text style={{ color: 'red', padding: 10 }}>{errors} above</Text>}
 
                 <CreatedJournals userData={userData} newEntry={newEntry} />
             </ScrollView >
