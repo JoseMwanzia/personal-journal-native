@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert, Text, Platform, Pressable } from 'react-native';
 import { Input } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ChangePassword({ navigation, userId, setVisible }) {
     const [passwordData, setPasswordData] = useState({
@@ -15,7 +16,7 @@ export default function ChangePassword({ navigation, userId, setVisible }) {
     };
 
     const handleChangePassword = async () => {
-
+        const token = await AsyncStorage.getItem('userToken'); //get token 
 
         try {
             const response = await fetch(`http://192.168.100.166:3000/password/${parseInt(userId)}`, {
@@ -23,6 +24,7 @@ export default function ChangePassword({ navigation, userId, setVisible }) {
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}` // send token to protect the route
                 },
                 body: JSON.stringify(passwordData),
             });
